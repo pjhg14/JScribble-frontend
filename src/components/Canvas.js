@@ -1,80 +1,69 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useReducer } from "react";
+import { canvasReducer, initialCanvasState } from "../utils/reducers/canvasReducer";
 
 export default function Canvas() {
-    const [drawing, setDrawing] = useState(false)
-    const [lineCap, setLineCap] = useState("round")
-    const [lineWidth, setLineWidth] = useState(5)
-    const [strokeColor, setStrokeColor] = useState("#fff")
-
     const canvas = useRef(null)
-    const context = useRef(null)
+    const [state, dispatch] = useReducer(canvasReducer, initialCanvasState)
 
     useEffect(()=>{
-        // TODO: change getElementById to useRef
-        context.current = canvas.current.getContext("2d")
-        context.current.lineJoin = "round"
-        context.current.lineCap = "round"
-        context.current.lineWidth = 5
-        // Supports hex values
-        context.current.strokeStyle = "black"
-        context.current.fillStyle = "blue"
+        dispatch({
+            type: "init",
+            payload: canvas.current
+        })
 
-        // console.log(drawBoard)
+        // TODO: change getElementById to useRef
+        // context.current = canvas.current.getContext("2d")
+        // context.current.lineJoin = "round"
+        // context.current.lineCap = "round"
+        // context.current.lineWidth = 5
+        // // Supports hex values
+        // context.current.strokeStyle = "black"
+        // context.current.fillStyle = "blue"
+
+        // console.log(context.current.getImageData(0,0,canvas.current.width, canvas.current.height).data)
     },[])
 
     function handlePaint(e) {
-        if (!drawing) return
+        if (!state.drawing) return
 
         const cursorX = e.pageX - canvas.current.offsetLeft
         const cursorY = e.pageY - canvas.current.offsetTop
-            
-        context.current.lineTo(cursorX, cursorY)
-        context.current.stroke()
-        context.current.beginPath()
-        context.current.moveTo(cursorX, cursorY)
+        
+        // seems like the most performant way to draw in react for some reason???
+        state.context.lineTo(cursorX, cursorY)
+        state.context.stroke()
+        state.context.beginPath()
+        state.context.moveTo(cursorX, cursorY)
     }
 
     function handleDrawStart(e) {
         const cursorX = e.pageX - canvas.current.offsetLeft
         const cursorY = e.pageY - canvas.current.offsetTop
 
-        setDrawing(true)
-        context.current.lineTo(cursorX, cursorY)
-        context.current.stroke()
+        // setDrawing(true)
+        dispatch({
+            type: "startDrawing"
+        })
+        state.context.lineTo(cursorX, cursorY)
+        state.context.stroke()
     }
 
     function handleDrawEnd() {
-        setDrawing(false)
+        // setDrawing(false)
+        dispatch({
+            type: "stopDrawing"
+        })
         // Begin new path to end last one
-        context.current.closePath()
-        context.current.beginPath()
+        state.context.closePath()
+        state.context.beginPath()
     }
 
     function handleCanvasClear() {
-        context.current.clearRect(0, 0, canvas.current.width, canvas.current.height)
+        state.context.clearRect(0, 0, canvas.current.width, canvas.current.height)
     }
-    function floodFill(imageData) {
-        /* 
-        Flood-fill (node):
-            1. Set Q to the empty queue or stack.
-            2. Add node to the end of Q.
-            3. While Q is not empty:
-            4.   Set n equal to the first element of Q.
-            5.   Remove first element from Q.
-            6.   If n is Inside:
-                    Set the n
-                    Add the node to the west of n to the end of Q.
-                    Add the node to the east of n to the end of Q.
-                    Add the node to the north of n to the end of Q.
-                    Add the node to the south of n to the end of Q.
-            7. Continue looping until Q is exhausted.
-            8. Return.
-        */
-        const queue = [...imageData]
+    
 
-    }
-
-    // console.log(context.current)
+    // console.log()
 
     return(
         <>
@@ -119,4 +108,86 @@ export default function Canvas() {
             </div>
         </>
     )
+}
+
+// TODO: move functions into utility folder
+
+// fills all similarly colored adjacent pixels with a target color (target color defaults to black rgba(0,0,0,1))
+function floodFill(context, targetX, targetY, { red = 0, green = 0, blue = 0, alpha = 255 }) {
+    /* 
+    Flood-fill (node):
+        1. Set Q to the empty queue or stack.
+        2. Add node to the end of Q.
+        3. While Q is not empty:
+        4.   Set n equal to the first element of Q.
+        5.   Remove first element from Q.
+        6.   If n is Inside:
+                Set the n
+                Add the node to the west of n to the end of Q.
+                Add the node to the east of n to the end of Q.
+                Add the node to the north of n to the end of Q.
+                Add the node to the south of n to the end of Q.
+        7. Continue looping until Q is exhausted.
+        8. Return.
+    */
+
+    const queue = []
+
+    // color data is saved as 4 entries in the imageData array this constant is to help with that
+    const COORD_LENGTH = 4
+    
+    const width = context.canvas.width
+    const height = context.canvas.height
+    const imageData = context.getImageData(0, 0, width, height)
+
+    const targetPosition = targetY * (width * COORD_LENGTH) + targetX * COORD_LENGTH
+    queue.push(targetPosition)
+
+    // Set color to change (all colors equal to targetPosition color)
+    const targetColor = {
+        red: imageData[targetPosition], 
+        greeen:imageData[targetPosition + 1],
+        blue: imageData[targetPosition + 2],
+        alpha: imageData[targetPosition + 3]
+    }
+
+    while(queue.length !== 0) {
+        // get current position from queue
+        let currentPosition = queue.shift()
+
+        // Extract color values from current position
+        let currentPixelColor = {
+            red: imageData[currentPosition], 
+            greeen:imageData[currentPosition + 1],
+            blue: imageData[currentPosition + 2],
+            alpha: imageData[currentPosition + 3]
+        }
+
+        // If current pixel color matches the target color
+        if (colorMatches(currentPixelColor, targetColor)) {
+            // set current pixel to target color
+            imageData[currentPosition] = red
+            imageData[currentPosition + 1] = green
+            imageData[currentPosition + 2] = blue
+            imageData[currentPosition + 3] = alpha
+
+            // add west pixel to queue
+            queue.push(currentPosition - 4)
+
+            // add east pixel to queue
+            queue.push(currentPosition + 4)
+
+            // add north pixel to queue
+            queue.push(currentPosition - width)
+
+            // add south pixel to queue
+            queue.push(currentPosition + width)
+        }
+    }
+
+    return imageData
+}
+
+function colorMatches(pixel, target) {
+    return pixel.red === target.red && pixel.green === target.green && pixel.blue === target.blue && pixel.alpha === target.alpha
 }
