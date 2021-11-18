@@ -1,0 +1,42 @@
+:root {
+    /* Font */
+    font-size: 16px;
+
+    /* TODO: import new font */
+    font-family: Arial, Helvetica, sans-serif;
+
+    /* color vars */
+    /* color fallbacks */
+    --background-color: ;
+    --text-color: ;
+    --accent-color: ;
+
+    /* main theme (dark theme) */
+    --background-color: ;
+    --text-color: ;
+    --accent-color: ;
+}
+
+*, 
+*::after, 
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+.board {
+    border: 1px solid black; 
+}
+
+/* Utility classes */
+.flex {
+    display: flex;
+    gap: var(--gap, 1rem);
+}
+
+.grid {
+    display: grid;
+    gap: var(--gap, 1rem);
+}
