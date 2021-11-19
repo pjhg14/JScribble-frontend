@@ -1,9 +1,17 @@
 export const initialCanvasState = {
     context: null,
     drawing: false,
+    penColor: "#000000",
+    fillColor: "#ffffff",
+    penSize: 5,
+    penCap: "round",
+    joinType: "round",
+    backgroundColor: "#ffffff",
+    pastPaths: []
 }
 
 export function canvasReducer(state, action) {
+    let pathArray
 
     switch (action.type) {
         case "init":
@@ -12,8 +20,8 @@ export function canvasReducer(state, action) {
             context.lineJoin = "round"
             context.lineCap = "round"
             context.lineWidth = 5
-            context.strokeStyle = "black"
-            context.fillStyle = "white"
+            context.strokeStyle = "#000000"
+            context.fillStyle = "#ffffff"
 
             return {
                 ...state,
@@ -32,31 +40,63 @@ export function canvasReducer(state, action) {
                 drawing: false 
             }
 
-        case "setLineJoin":
-            state.context.lineJoin = action.payload
+        case "setJoinType":
+            return {
+                ...state,
+                joinType: action.payload
+            }
 
-            return state
+        case "setPenCap":
+            return {
+                ...state,
+                penCap: action.payload
+            }
 
-        case "setLineCap":
-            state.context.lineCap = action.payload
-    
-            return state
+        case "setPenSize":
+            return {
+                ...state,
+                penSize: action.payload
+            }
 
-        case "setLineWidth":
-            state.context.lineWidth = action.payload
+        case "setPenColor":
+            return {
+                ...state,
+                penColor: action.payload
+            }
 
-            return state
+        case "setFillColor":
+            return {
+                ...state,
+                fillColor: action.payload
+            }
+        case "addLastPath":
+            pathArray = [...state.pastPaths]
+            
+            // stack limit (might implement later)
+            // if (pathArray.length > 9) pathArray.shift()
+            
+            pathArray.push(action.payload)
+            
+            // console.log(pathArray)
+            return {
+                ...state,
+                pastPaths: pathArray
+            }
+        case "removeLastPath":
+            // create new array with all but last path
+            pathArray = [...(state.pastPaths)]
+            pathArray.pop()
 
-        case "setStrokeStyle":
-            state.context.lineJoin = action.payload
+            return {
+                ...state,
+                pastPaths: pathArray
+            }
 
-            return state
-
-        case "setFillStyle":
-            state.context.lineJoin = action.payload
-
-            return state
-    
+        case "clearPastPaths":
+            return {
+                ...state,
+                pastPaths: []
+            }
         default:
             return state
     }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useReducer } from "react";
 import { canvasReducer, initialCanvasState } from "../utils/reducers/canvasReducer";
+import PenSizePicker from "./PenSizePicker";
 
 export default function Canvas() {
     const canvas = useRef(null)
@@ -26,42 +27,118 @@ export default function Canvas() {
     function handlePaint(e) {
         if (!state.drawing) return
 
-        const cursorX = e.pageX - canvas.current.offsetLeft
-        const cursorY = e.pageY - canvas.current.offsetTop
+        // console.log("drawing...")
+
+        let cursorX
+        let cursorY
+
+        // If on desktop
+        if (e.pageX || e.pageY) {
+            cursorX = e.pageX - canvas.current.offsetLeft
+            cursorY = e.pageY - canvas.current.offsetTop
+        } else {
+            // else on mobile
+            console.log(e.touches)
+            cursorX = e.touches[0].pageX - canvas.current.offsetLeft
+            cursorY = e.touches[0].pageY - canvas.current.offsetTop
+        }
+        
         
         // seems like the most performant way to draw in react for some reason???
         state.context.lineTo(cursorX, cursorY)
         state.context.stroke()
-        state.context.beginPath()
         state.context.moveTo(cursorX, cursorY)
     }
 
     function handleDrawStart(e) {
-        const cursorX = e.pageX - canvas.current.offsetLeft
-        const cursorY = e.pageY - canvas.current.offsetTop
+        // console.log("draw start")
+        let cursorX
+        let cursorY
 
-        // setDrawing(true)
-        dispatch({
-            type: "startDrawing"
-        })
+        // If on desktop
+        if (e.pageX || e.pageY) {
+            cursorX = e.pageX - canvas.current.offsetLeft
+            cursorY = e.pageY - canvas.current.offsetTop
+        } else {
+            // else on mobile
+            cursorX = e.touches[0].pageX - canvas.current.offsetLeft
+            cursorY = e.touches[0].pageY - canvas.current.offsetTop
+        }
+
+        // Enforce context state
+        state.context.lineWidth = state.penSize
+        state.context.lineCap = state.penCap
+        state.context.lineJoin = state.joinType
+        state.context.strokeStyle = state.penColor
+        state.context.fillStyle = state.fillColor
+
+        dispatch({type: "startDrawing"})
+        state.context.beginPath()
         state.context.lineTo(cursorX, cursorY)
         state.context.stroke()
     }
 
-    function handleDrawEnd() {
-        // setDrawing(false)
-        dispatch({
-            type: "stopDrawing"
-        })
+    function handleDrawEnd(e) {
+        if (!state.drawing) return
+
+        // console.log("draw end")
+        dispatch({type: "stopDrawing"})
         // Begin new path to end last one
+        state.context.stroke()
         state.context.closePath()
-        state.context.beginPath()
+
+        // console.log(e)
+
+        // if end of drawing was NOT due to the mouse leaving the canvas
+        if (e.type != 'mouseout') {
+            // add drawn path to last path
+            dispatch({
+                type: "addLastPath",
+                payload: state.context.getImageData(0, 0, canvas.current.width, canvas.current.height)
+            })
+        }
+        
     }
 
     function handleCanvasClear() {
-        state.context.clearRect(0, 0, canvas.current.width, canvas.current.height)
+        state.context.fillStyle = state.backgroundColor
+        state.context.fillRect(0, 0, canvas.current.width, canvas.current.height)
+        state.context.fillStyle = state.fillColor
+
+        dispatch({
+            type: "clearPastPaths"
+        })
     }
-    
+
+    function handleCanvasUndo() {
+        // if last action is end of stack
+        if (state.pastPaths.length <= 1) {
+            handleCanvasClear()
+            return
+        }
+
+        // get last saved imageData
+        const imageData = state.pastPaths[state.pastPaths.length - 2]
+        state.context.putImageData(imageData, 0, 0)
+
+        dispatch({
+            type: "removeLastPath"
+        })
+    }
+
+    function handleLineWidthChange(event) {
+        dispatch({
+            type: "setPenSize",
+            payload: event.target.value
+        })
+    }
+
+    function handlePenColorChange(event) {
+        dispatch({
+            type: "setPenColor",
+            payload: event.target.value
+        })
+    }
 
     // console.log()
 
@@ -76,23 +153,30 @@ export default function Canvas() {
                 onMouseDown={handleDrawStart}
                 onMouseUp={handleDrawEnd}
                 onMouseMove={handlePaint}
+                onMouseOut={handleDrawEnd}
 
                 // Mobile/Tablet Touch events (Does not work for some reason???)
                 onTouchStart={handleDrawStart}
                 onTouchEnd={handleDrawEnd}
-                onTouchMove={handlePaint}
-
-                // onClick={e => console.log(e)}
-                >    
+                onTouchMove={handlePaint}>    
             </canvas>
-            <div className="board-options">
+            <div className="tools">
+                <button 
+                    disabled={state.pastPaths.length <= 0}
+                    onClick={handleCanvasUndo}>
+                        Undo
+                </button>
+                {/* <button>Redo</button> */}
                 <button onClick={handleCanvasClear}>Clear Board</button>
 
-                <label htmlFor="stroke-width">Stroke Width</label>
-                <input type="number" id="stroke-width" min="1" max="47"/>
+                <PenSizePicker penSize={state.penSize} setPenSize={handleLineWidthChange}/>
 
                 <label htmlFor="color-picker">Stroke Color</label>
-                <input type="color" id="color-picker"/>
+                <input 
+                    type="color"   
+                    id="color-picker" 
+                    onChange={handlePenColorChange}
+                />
 
                 <label htmlFor="draw-type">Draw options</label>
                 <select id="draw-type">
