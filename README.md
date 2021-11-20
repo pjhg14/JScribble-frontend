@@ -51,3 +51,4 @@ Broadly speaking: add a full-stack feature that makes sense for your application
 - saving images as .png
 - extra stamp options (star, heart, other complex shapes)
 - canvas layers
+- save working data (with layers)
