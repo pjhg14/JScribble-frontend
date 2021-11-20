@@ -87,8 +87,6 @@ export default function Canvas() {
         state.context.stroke()
         state.context.closePath()
 
-        // console.log(e)
-
         // if end of drawing was NOT due to the mouse leaving the canvas
         if (e.type != 'mouseout') {
             // add drawn path to last path

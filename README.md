@@ -1,4 +1,20 @@
-# Paint App - Becoming Bob Ross
+# JScribble - the online doodling app
+
+Deployed Site...
+
+Demo GIF(s) Here...
+
+Description of you application:
+JScribble is...
+
+Explain your project's features:
+With JScribble you can...
+
+"Meet the Engineers" that shows a photo of the you and your team plus links to your LinkedIn, Twitter, and Github
+
+Build instructions:
+
+
 
 Computers have been a boon for creativity and imagination. Digital art has, for decades now, been a medium in its own right; and with the advent of NFTs, the future might be very bright indeed for digital artists. Today, we'll build an app that lets your friends and loved ones express their creative side.
 
@@ -27,3 +43,11 @@ Broadly speaking: add a full-stack feature that makes sense for your application
 - stamp (fill clicked area with specified shape)
 - shape parameters (change shape size, fill color, stroke color)
 - fill area with color
+- create landing page (Done!)
+- style drawing page
+- style landing page
+
+## Stretch Goals
+- saving images as .png
+- extra stamp options (star, heart, other complex shapes)
+- canvas layers
