@@ -1,4 +1,8 @@
 import { useEffect, useRef, useReducer } from "react";
+import { 
+    drawEnd, drawStart, ellipseStamp, eraseEnd, eraseMove, eraseStart, 
+    getPointerPosition, lineEnd, lineStart, paint, rectStamp 
+} from "../utils/canvasActions";
 import { canvasReducer, initialCanvasState } from "../utils/reducers/canvasReducer";
 import RangePicker from "./RangePicker";
 
@@ -26,22 +30,22 @@ export default function Canvas() {
 
         switch (state.drawType) {
             case "pen":
-                handleDrawStart(event)
+                drawStart(event, state, dispatch)
                 break;
             case "line":
-                handleLineStart(event)
+                lineStart(event, state, dispatch)
                 break;
             case "fill":
-                
+                // None, just need the case so draw type does not reset
                 break;
             case "erase":
-                handleEraseStart(event)
+                eraseStart(event, state, dispatch)
                 break;
             case "rectangle":
-                
+                // None, just need the case so draw type does not reset
                 break;
             case "ellipse":
-                
+                // None, just need the case so draw type does not reset
                 break;
             default:
                 dispatch({
@@ -55,22 +59,22 @@ export default function Canvas() {
     function handleActionMove(event) {
         switch (state.drawType) {
             case "pen":
-                handlePaint(event)
+                paint(event, state)
                 break;
             case "line":
                 // None, just need the case so draw type does not reset
                 break;
             case "fill":
-                
+                // None, just need the case so draw type does not reset
                 break;
             case "erase":
-                handleEraseMove(event)
+                eraseMove(event, state)
                 break;
             case "rectangle":
-                
+                // None, just need the case so draw type does not reset
                 break;
             case "ellipse":
-                
+                // None, just need the case so draw type does not reset
                 break;
             default:
                 dispatch({
@@ -84,24 +88,24 @@ export default function Canvas() {
     function handleActionUp(event) {
         switch (state.drawType) {
             case "pen":
-                handleDrawEnd()
+                drawEnd(state, dispatch)
                 break;
             case "line":
-                handleLineEnd(event)
+                lineEnd(event, state, dispatch)
                 break
             case "fill":
                 if (event.type === 'mouseout') return
 
-                // handleFill(event)
+                // Fill(event)
                 break
             case "erase":
-                handleEraseEnd(event)
+                eraseEnd(state, dispatch)
                 break
             case "rectangle":
-                handleRectStamp(event)
+                rectStamp(event, state)
                 break
             case "ellipse":
-                handleEllipseStamp(event)
+                ellipseStamp(event, state)
                 break
             default:
                 dispatch({
@@ -137,72 +141,6 @@ export default function Canvas() {
     // ---------------------------------------------------------------------------------------------------/
     
     // ---------------------------------------------------------------------------------------------------/
-    // Freeform paint functions ///////////////////////////////////////////////////////////////////////////
-    // ---------------------------------------------------------------------------------------------------/
-    function handleDrawStart(event) {
-        // console.log("draw start")
-        const {cursorX, cursorY} = getPointerPosition(event, state.context)
-
-        dispatch({type: "startDrawing"})
-        state.context.beginPath()
-        state.context.lineTo(cursorX, cursorY)
-        state.context.stroke()
-    }
-
-    function handlePaint(event) {
-        if (!state.drawing) return
-
-        // console.log("drawing...")
-        const {cursorX, cursorY} = getPointerPosition(event, state.context)
-        
-        // seems like the most performant way to draw in react for some reason???
-        state.context.lineTo(cursorX, cursorY)
-        state.context.stroke()
-        state.context.moveTo(cursorX, cursorY)
-    }
-
-    function handleDrawEnd() {
-        if (!state.drawing) return
-
-        // console.log("draw end")
-        dispatch({type: "stopDrawing"})
-        // Begin end last path
-        state.context.stroke()
-        state.context.closePath()
-        
-    }
-    // ---------------------------------------------------------------------------------------------------/
-    // ---------------------------------------------------------------------------------------------------/
-
-    // ---------------------------------------------------------------------------------------------------/
-    // Line draw functions ////////////////////////////////////////////////////////////////////////////////
-    // ---------------------------------------------------------------------------------------------------/
-    function handleLineStart(event) {
-        // console.log("draw start")
-        const {cursorX, cursorY} = getPointerPosition(event, state.context)
-
-        dispatch({type: "startDrawing"})
-        state.context.beginPath()
-        state.context.moveTo(cursorX, cursorY)
-    }
-
-    function handleLineEnd(event) {
-        if (!state.drawing) return
-
-        // console.log("draw start")
-        const {cursorX, cursorY} = getPointerPosition(event, state.context)
-
-        // console.log("draw end")
-        dispatch({type: "stopDrawing"})
-        // Begin new path to end last one
-        state.context.lineTo(cursorX, cursorY)
-        state.context.stroke()
-        state.context.closePath()
-    }
-    // ---------------------------------------------------------------------------------------------------/
-    // ---------------------------------------------------------------------------------------------------/
-
-    // ---------------------------------------------------------------------------------------------------/
     // fill function //////////////////////////////////////////////////////////////////////////////////////
     // ---------------------------------------------------------------------------------------------------/
     function handleFill(event) {
@@ -213,99 +151,7 @@ export default function Canvas() {
     // ---------------------------------------------------------------------------------------------------/
     // ---------------------------------------------------------------------------------------------------/
 
-    // ---------------------------------------------------------------------------------------------------/
-    // Eraser functions ///////////////////////////////////////////////////////////////////////////////////
-    // ---------------------------------------------------------------------------------------------------/
-    function handleEraseStart(event) {
-        const {cursorX, cursorY} = getPointerPosition(event, state.context)
-
-        dispatch({type: "startDrawing"})
-        state.context.clearRect(
-            cursorX - Math.floor(state.penSize / 2), 
-            cursorY - Math.floor(state.penSize / 2),
-            state.penSize,
-            state.penSize
-        )
-    }
-
-    function handleEraseMove(event) {
-        if (!state.drawing) return
-
-        // console.log("drawing...")
-        const {cursorX, cursorY} = getPointerPosition(event, state.context)
-        
-        // seems like the most performant way to draw in react for some reason???
-        state.context.clearRect(
-            cursorX - Math.floor(state.penSize / 2), 
-            cursorY - Math.floor(state.penSize / 2),
-            state.penSize,
-            state.penSize
-        )
-    }
-
-    function handleEraseEnd(event) {
-        if (!state.drawing) return
-
-        // console.log("draw end")
-        dispatch({type: "stopDrawing"})
-
-        // if end of drawing was NOT due to the mouse leaving the canvas
-        if (event.type !== 'mouseout') {
-            // add drawn path to last path
-            dispatch({
-                type: "addLastPath",
-                payload: state.context.getImageData(0, 0, canvas.current.width, canvas.current.height)
-            })
-        }
-        
-    }
-    // ---------------------------------------------------------------------------------------------------/
-    // ---------------------------------------------------------------------------------------------------/
-
-    // ---------------------------------------------------------------------------------------------------/
-    // stamp function /////////////////////////////////////////////////////////////////////////////////////
-    // ---------------------------------------------------------------------------------------------------/
-    // TODO: merge all stamp methods into one
-    function handleRectStamp(event) {
-        if (event.type === 'mouseout') return
-
-        const {cursorX, cursorY} = getPointerPosition(event, state.context)
-        
-        state.context.beginPath()
-        
-        state.context.rect(
-            cursorX - Math.floor(state.stampWidth / 2), 
-            cursorY - Math.floor(state.stampHeight / 2), 
-            state.stampWidth, 
-            state.stampHeight
-        )
-        state.context.fill()
-        state.context.stroke()
-        state.context.closePath()
-    }
-
-    function handleEllipseStamp(event) {
-        if (event.type === 'mouseout') return
-
-        const {cursorX, cursorY} = getPointerPosition(event, state.context)
-        
-        state.context.beginPath()
-        
-        state.context.ellipse(
-            cursorX, 
-            cursorY,
-            Math.floor(state.stampWidth / 2), 
-            Math.floor(state.stampHeight / 2),
-            0,
-            0,
-            2 * Math.PI
-        )
-        state.context.fill()
-        state.context.stroke()
-        state.context.closePath()
-    }
-    // ---------------------------------------------------------------------------------------------------/
-    // ---------------------------------------------------------------------------------------------------/
+    
 
     // ---------------------------------------------------------------------------------------------------/
     // Canvas functions ///////////////////////////////////////////////////////////////////////////////////
@@ -465,31 +311,7 @@ export default function Canvas() {
 }
 
 // TODO: move functions into utility folder
-function getPointerPosition(event, context) {
-    let cursorX
-    let cursorY
-    const rect = context.canvas.getBoundingClientRect()
 
-    // If on desktop
-    if (event.pageX || event.pageY) {
-        cursorX = event.pageX - Math.floor(rect.left)
-        cursorY = event.pageY - Math.floor(rect.top)
-    } else {
-        // else on mobile
-        cursorX = event.touches[0].pageX - Math.floor(rect.left)
-        cursorY = event.touches[0].pageY - Math.floor(rect.top)
-    }
-
-    if (cursorX > context.canvas.width) {
-        cursorX = context.canvas.width
-    }
-
-    if (cursorY > context.canvas.height) {
-        cursorY = context.canvas.height
-    }
-
-    return { cursorX, cursorY }
-}
 
 // fills all similarly colored adjacent pixels with a target color (target color defaults to black rgba(0,0,0,1))
 function fillCanvas(context, clickX, clickY) {
@@ -648,7 +470,6 @@ function getColorFromPosition(imageData, position) {
     }
 }
 
-// Thanks to Tim Down on StackOverflow
 function hexToRGB(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
