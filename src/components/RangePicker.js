@@ -1,22 +1,22 @@
-export default function PenSizePicker({ penSize, setPenSize }) {
+export default function RangePicker({ label, value, setValue }) {
     return(
         <>
-            <label htmlFor="stroke-width">Stroke Width</label>
+            <label htmlFor="stroke-width">{label}</label>
                 <input 
                     type="range" 
                     id="stroke-width" 
                     min="1" 
                     max="100" 
-                    value={penSize} 
-                    onChange={setPenSize}
+                    value={value} 
+                    onChange={setValue}
                 />
                 <input 
                     type="number" 
                     id="stroke-width" 
                     min="1" 
                     max="100" 
-                    value={penSize} 
-                    onChange={setPenSize}
+                    value={value} 
+                    onChange={setValue}
                 />
         </>
     )

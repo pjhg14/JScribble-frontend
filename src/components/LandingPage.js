@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function LandingPage() {
 
     /* 
@@ -20,8 +22,8 @@ export default function LandingPage() {
     return(
         <div>
             <header>
-                <h1></h1>
-                <p></p>
+                <h1>JScrible</h1>
+                <p>the online doodling app</p>
             </header>
             
             <section>Description</section>
@@ -29,7 +31,10 @@ export default function LandingPage() {
             <section>Demo video</section>
             <section>Tutorial</section>
             <section>Login</section>
-            <section>Draw (without need for signing up/ loging in</section>
+            <section>
+                Draw (without need for signing up/ loging in)
+                <Link to="/draw">Start Here</Link>
+            </section>
             <section>Meet the Engineers</section>
         </div>
     )

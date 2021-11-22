@@ -1,12 +1,14 @@
 export const initialCanvasState = {
     context: null,
     drawing: false,
+    drawType: "pen",
     penColor: "#000000",
     fillColor: "#ffffff",
     penSize: 5,
     penCap: "round",
     joinType: "round",
-    backgroundColor: "#ffffff",
+    stampWidth: 5,
+    stampHeight: 5,
     pastPaths: []
 }
 
@@ -17,11 +19,11 @@ export function canvasReducer(state, action) {
         case "init":
             const context = action.payload.getContext("2d")
 
-            context.lineJoin = "round"
-            context.lineCap = "round"
-            context.lineWidth = 5
-            context.strokeStyle = "#000000"
-            context.fillStyle = "#ffffff"
+            context.lineJoin = state.joinType
+            context.lineCap = state.penCap
+            context.lineWidth = state.penSize
+            context.strokeStyle = state.penColor
+            context.fillStyle = state.fillColor
 
             return {
                 ...state,
@@ -38,6 +40,12 @@ export function canvasReducer(state, action) {
             return {
                 ...state,
                 drawing: false 
+            }
+
+        case "setDrawType":
+            return {
+                ...state,
+                drawType: action.payload
             }
 
         case "setJoinType":
@@ -68,6 +76,16 @@ export function canvasReducer(state, action) {
             return {
                 ...state,
                 fillColor: action.payload
+            }
+        case "setStampWidth":
+            return {
+                ...state,
+                stampWidth: action.payload
+            }
+        case "setStampHeight":
+            return {
+                ...state,
+                stampHeight: action.payload
             }
         case "addLastPath":
             pathArray = [...state.pastPaths]
