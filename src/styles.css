@@ -7,14 +7,15 @@
 
     /* color vars */
     /* color fallbacks */
-    --background-color: ;
-    --text-color: ;
-    --accent-color: ;
+    --background-color: #011C27;
+    --text-color: #E7E5DF;
+    --main-accent-color: #EB5E55;
 
     /* main theme (dark theme) */
-    --background-color: ;
-    --text-color: ;
-    --accent-color: ;
+    --background-color: hsl(197, 95%, 8%);
+    --text-color: hsl(45, 14%, 89%);
+    --main-accent-color: hsl(4, 79%, 63%);
+    --alt-accent-color: linear-gradient(to right, orange , yellow, green, cyan, blue, violet);
 }
 
 *, 
@@ -26,9 +27,22 @@
     text-decoration: none;
 }
 
-.board {
-    border: 1px solid black;
-    cursor: crosshair;
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    /* overflow-x: scroll; */
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0.5rem;
+
+    background-color: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--main-accent-color);
+    border-radius: 1rem;
 }
 
 /* Utility classes */
@@ -40,4 +54,296 @@
 .grid {
     display: grid;
     gap: var(--gap, 1rem);
+}
+
+.button {
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+    padding: 0.5em 2em;
+    border-radius: 0.5rem;
+    border: 1px solid var(--main-accent-color);
+    color: var(--text-color);
+    background-color: var(--main-accent-color);
+
+    transition: 
+        color 500ms ease, 
+        border-color 500ms ease, 
+        background-color 500ms ease, 
+        box-shadow 500ms ease;
+}
+
+.button:not(.inverted):hover {
+    box-shadow: inset 0 0 999px 999px rgba(255, 255, 255, 0.5);
+}
+
+.inverted {
+    border: 1px solid var(--main-accent-color);
+    color: var(--main-accent-color);
+    background-color: var(--background-color);
+}
+
+.inverted:hover {
+    /* border: 1px solid var(--main-accent-color); */
+    color: var(--text-color);
+    background-color: var(--main-accent-color);
+}
+
+.inverted[disabled] {
+    cursor: default;
+    /* gray button out as well */
+    --main-accent-color: hsl(0, 0%, 50%);
+    color: var(--main-accent-color);
+    background-color: var(--background-color);
+}
+
+.debug {
+    border: 1px solid red;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: var(--main-accent-color);
+    border-radius: 9999px;
+}
+
+.footer {
+    --gap: 0.7ch;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--main-accent-color);
+    color: var(--background-color);
+    width: 100vw;
+}
+
+.mb-link {
+    text-decoration: underline;
+    color: inherit;
+}
+
+/* Landing page */
+.landing {
+    margin: 0 5vw 0 5vw;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    width: 100%;
+    height: 50vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.header .title {
+    font-size: 8rem;
+}
+.header .sub-title {
+    padding-left: 2rem;
+    font-size: 2.5rem;
+}
+
+.demo-img {
+    border: 1px solid var(--main-accent-color);
+    border-radius: 1rem;
+    aspect-ratio: 16 / 9;
+    width: 40vw;
+}
+
+.landing-section {
+    font-size: 1.6rem;
+    width: 100%;
+    min-height: 20vh;
+    /* border: 1px solid var(--main-accent-color); */
+    padding: 1rem 4rem;
+}
+
+.sub-nav {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.portal-bar {
+    --gap: 0.5rem;
+    align-items: center;
+}
+
+.dev-img {
+    aspect-ratio: 3 / 4;
+    max-width: 15rem;
+}
+
+.dev-links {
+    font-size: 2rem;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.about {
+    font-size: 1.5rem;
+    max-width: 50vw;
+    flex-wrap: wrap;
+}
+
+.links {
+    flex-direction: column;
+}
+
+.link {
+    justify-content: center;
+    align-items: center;
+    background-color: var(--main-accent-color);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    color: var(--text-color);
+
+    transition: 
+        color 500ms ease, 
+        border-color 500ms ease, 
+        background-color 500ms ease, 
+        box-shadow 500ms ease;
+}
+
+.link:hover {
+    box-shadow: inset 0 0 999px 999px rgba(255, 255, 255, 0.5);
+}
+
+.icon {
+    color: var(--text-color);
+    font-size: 4rem;
+    padding: 1rem;
+    background-color: var(--background-color);
+    border-radius: 999px;
+}
+
+.personal-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+}
+
+/* Draw page */
+.draw-page {
+    /* --gap: 1.5rem; */
+    grid-template-columns: auto 3fr auto;
+    justify-content: center;
+    align-items: center;
+    margin: 0 1rem;
+}
+
+.toolbar {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.right {
+    max-width: 10rem;
+}
+
+.left {
+    max-width: 10rem;
+}
+
+.toolbar-group {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.toolbar-button {
+    width: 100%;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+/* RangePicker */
+.range-picker {
+    
+
+    flex-direction: column;
+}
+
+.range-track {
+    cursor: pointer;
+    accent-color: var(--main-accent-color);
+    /* -webkit-appearance: none; */
+    /* margin: 10px 0; */
+    width: 100%;
+}
+
+.range-number {
+    /* cursor: pointer; */
+    accent-color: var(--main-accent-color);
+    width: 10ch;
+    padding: 0.2em 1em;
+    border: 1px solid hsl(0, 0%, 59%);
+    border-radius: 1rem;
+    background-color: hsl(0, 0%, 35%);
+    color: var(--text-color);
+}
+
+/* END RangePicker styles */
+
+/* ColorPicker */
+.color-picker {
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.color {
+    cursor: pointer;
+    border-radius: 0.25rem;
+}
+
+/* END ColorPicker Styles */
+
+.option-select {
+    cursor: pointer;
+    width: 100%;
+}
+
+.draw-type {
+    cursor: pointer;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--main-accent-color);
+    border-radius: 0.5rem;
+}
+
+.pen-cap {
+    cursor: pointer;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--main-accent-color);
+    border-radius: 0.5rem;
+}
+
+.board {
+    background-color: white;
+    border: 1px solid var(--main-accent-color);
+    cursor: crosshair;
+    max-width: 1920px;
+    max-height: 1080px;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+}
+
+/* Gallery page */
+.gallery {
+    flex-direction: column;
 }

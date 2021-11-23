@@ -1,7 +1,7 @@
-export function getPointerPosition(event, context) {
+export function getPointerPosition(event, state) {
     let cursorX
     let cursorY
-    const rect = context.canvas.getBoundingClientRect()
+    const rect = state.canvasRect
 
     // If on desktop
     if (event.pageX || event.pageY) {
@@ -13,12 +13,12 @@ export function getPointerPosition(event, context) {
         cursorY = event.touches[0].pageY - Math.floor(rect.top)
     }
 
-    if (cursorX > context.canvas.width) {
-        cursorX = context.canvas.width
+    if (cursorX > Math.floor(rect.width)) {
+        cursorX = Math.floor(rect.width)
     }
 
-    if (cursorY > context.canvas.height) {
-        cursorY = context.canvas.height
+    if (cursorY > Math.floor(rect.height)) {
+        cursorY = Math.floor(rect.height)
     }
 
     return { cursorX, cursorY }
@@ -29,7 +29,7 @@ export function getPointerPosition(event, context) {
 // ---------------------------------------------------------------------------------------------------/
 export function drawStart(event, state, dispatch) {
     // console.log("draw start")
-    const {cursorX, cursorY} = getPointerPosition(event, state.context)
+    const {cursorX, cursorY} = getPointerPosition(event, state)
     
     dispatch({type: "startDrawing"})
     state.context.beginPath()
@@ -41,7 +41,7 @@ export function paint(event, state) {
     if (!state.drawing) return
 
     // console.log("drawing...")
-    const {cursorX, cursorY} = getPointerPosition(event, state.context)
+    const {cursorX, cursorY} = getPointerPosition(event, state)
         
     state.context.lineTo(cursorX, cursorY)
     state.context.stroke()
@@ -65,7 +65,7 @@ export function drawEnd(state, dispatch) {
 // ---------------------------------------------------------------------------------------------------/
 export function lineStart(event, state, dispatch) {
     // console.log("draw start")
-    const {cursorX, cursorY} = getPointerPosition(event, state.context)
+    const {cursorX, cursorY} = getPointerPosition(event, state)
 
     dispatch({type: "startDrawing"})
     state.context.beginPath()
@@ -76,7 +76,7 @@ export function lineEnd(event, state, dispatch) {
     if (!state.drawing) return
 
     // console.log("draw start")
-    const {cursorX, cursorY} = getPointerPosition(event, state.context)
+    const {cursorX, cursorY} = getPointerPosition(event, state)
 
     // console.log("draw end")
     dispatch({type: "stopDrawing"})
@@ -92,7 +92,7 @@ export function lineEnd(event, state, dispatch) {
 // Eraser functions ///////////////////////////////////////////////////////////////////////////////////
 // ---------------------------------------------------------------------------------------------------/
 export function eraseStart(event, state, dispatch) {
-    const {cursorX, cursorY} = getPointerPosition(event, state.context)
+    const {cursorX, cursorY} = getPointerPosition(event, state)
 
     dispatch({type: "startDrawing"})
 
@@ -107,7 +107,7 @@ export function eraseMove(event, state) {
     if (!state.drawing) return
 
     // console.log("drawing...")
-    const {cursorX, cursorY} = getPointerPosition(event, state.context)
+    const {cursorX, cursorY} = getPointerPosition(event, state)
     
     if (state.penCap === "round") {
         clearCircle(state.context,cursorX, cursorY, Math.floor(state.penSize / 2))
@@ -132,7 +132,7 @@ export function eraseEnd(state, dispatch) {
 export function rectStamp(event, state) {
     if (event.type === 'mouseout') return
 
-    const {cursorX, cursorY} = getPointerPosition(event, state.context)
+    const {cursorX, cursorY} = getPointerPosition(event, state)
     
     state.context.beginPath()
     
@@ -150,7 +150,7 @@ export function rectStamp(event, state) {
 export function ellipseStamp(event, state) {
     if (event.type === 'mouseout') return
 
-    const {cursorX, cursorY} = getPointerPosition(event, state.context)
+    const {cursorX, cursorY} = getPointerPosition(event, state)
     
     state.context.beginPath()
     

@@ -1,5 +1,6 @@
 export const initialCanvasState = {
     context: null,
+    canvasRect: null,
     drawing: false,
     drawType: "pen",
     penColor: "#000000",
@@ -27,7 +28,16 @@ export function canvasReducer(state, action) {
 
             return {
                 ...state,
-                context
+                context,
+                canvasRect: context.canvas.getBoundingClientRect()
+            }
+
+        case "setCanvasBindingRect":
+            // console.log("setting rect", {rect: state.canvasRect})
+
+            return {
+                ...state,
+                canvasRect: action.payload
             }
 
         case "startDrawing":

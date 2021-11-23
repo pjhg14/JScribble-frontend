@@ -41,17 +41,21 @@ Broadly speaking: add a full-stack feature that makes sense for your application
 - clear canvas (Done!)
 - drawing parameters (change pen size, pen color) (Done!)
 - draw straight lines on canvas (Done!)
-- eraser
-- fill area with color
-- stamp (fill clicked area with specified shape)
-- shape parameters (change shape size, fill color, stroke color)
+- eraser (Done!)
+- stamp (fill clicked area with specified shape) (Done!)
+- shape parameters (change shape size, fill color, stroke color) (Done!)
 - create landing page (Started...)
-- style drawing page
-- style landing page
+- style drawing page (Started...)
+- style landing page (Started...)
 
 ## Stretch Goals
 - saving images as .png
+- fill area with color (Need to find performant method)
 - mobile optimization
 - extra stamp options (star, heart, fibo flower, other complex shapes)
 - canvas layers
 - save working data (with layers)
+
+### Known Issues
+- Canvas clears on screen resize
+- On active screen resize, draw position becomes desynced (clears on refresh though... state issue?)
