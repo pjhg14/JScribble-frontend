@@ -59,3 +59,6 @@ Broadly speaking: add a full-stack feature that makes sense for your application
 ### Known Issues
 - Canvas clears on screen resize
 - On active screen resize, draw position becomes desynced (clears on refresh though... state issue?)
+
+### Potential Issues?
+- Undo stack depth is currently uncapped, could cause trouble?

@@ -108,6 +108,31 @@ body {
     border-radius: 9999px;
 }
 
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: hsla(0, 0%, 0%, 0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    width: clamp(50vw, 50rem, 90vw);
+    height: min(50vw, 8rem);
+    background-color: var(--background-color);
+    color: var(--main-accent-color);
+    border: 1px solid var(--main-accent-color);
+    margin: auto;
+    padding: 0 2rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+}
+
 .footer {
     --gap: 0.7ch;
     justify-content: center;
