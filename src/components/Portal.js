@@ -4,7 +4,7 @@ import { userURL } from "../utils/urls";
 import Login from "./Login";
 import Signup from "./Signup";
 
-export default function Portal({authType, handleClose}) {
+export default function Portal({authType, closeModal}) {
     const { setUserParams } = useContext(UserContext)
     const [errors, setErrors] = useState([])
 
@@ -24,6 +24,11 @@ export default function Portal({authType, handleClose}) {
     }
 
     function submitCredentials(credentials) {
+        if (!(authType !== "login" && authType !== "signup")) {
+            setErrors(["Invalid auth Type"])
+            return
+        }
+
         setErrors([])
         
         fetch(`${userURL}/${authType}`, {
@@ -41,7 +46,7 @@ export default function Portal({authType, handleClose}) {
                 } else {
                     localStorage.token = payload.token
                     setUserParams(payload.user)
-                    handleClose()
+                    closeModal()
                 }
             })
     }

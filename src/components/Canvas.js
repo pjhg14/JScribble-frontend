@@ -1,4 +1,5 @@
-import { useEffect, useRef, useReducer, useContext } from "react";
+import { AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useReducer, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../App";
 import { 
@@ -7,12 +8,26 @@ import {
 import { canvasReducer, initialCanvasState } from "../utils/reducers/canvasReducer";
 import { useResizeObserver } from "../utils/useResizeObserver";
 import ColorPicker from "./ColorPicker";
+import ImageForm from "./ImageForm";
+import Modal from "./Modal";
+import Portal from "./Portal";
 import RangePicker from "./RangePicker";
 
 export default function Canvas() {
     const canvas = useRef(null)
     const [state, dispatch] = useReducer(canvasReducer, initialCanvasState)
     const { user } = useContext(UserContext)
+    const [modalOpen, setModalOpen] = useState(false)
+    const [actionType, setActionType] = useState("")
+
+    function handleClose() {
+        setModalOpen(false)
+    }
+
+    function handleOpen(type) {
+        setActionType(type)
+        setModalOpen(true)   
+    }
 
     function setCanvasBoundingBox(entries) {
         // console.log({rect: entries[0].target.getBoundingClientRect()})
@@ -250,92 +265,124 @@ export default function Canvas() {
     // ---------------------------------------------------------------------------------------------------/
 
     return(
-        <div className="draw-page grid">
-            <div className="toolbar left flex">
-                <button 
-                    className="button inverted toolbar-button"
-                    disabled={state.pastPaths.length <= 0}
-                    onClick={handleCanvasUndo}>
-                        Undo
-                </button>
-                <button className="button inverted toolbar-button" onClick={handleCanvasClear}>Clear Board</button>
+        <>
+            <AnimatePresence initial={false} exitBeforeEnter={true}>
+                { modalOpen && 
+                    <Modal handleClose={handleClose}>
+                        {/* switch between portal and upload */}
+                        { user.username === "guest" && actionType !== "save" ? (
+                            <Portal authType={actionType} closeModal={handleClose}/>    
+                        ) : (
+                            <ImageForm actionType={actionType} closeModal={handleClose}/>
+                        )}
+                    </Modal>
+                }
+            </AnimatePresence>
+            <div className="draw-page grid">
+                <div className="toolbar left flex">
+                    <button 
+                        className="button inverted toolbar-button"
+                        disabled={state.pastPaths.length <= 0}
+                        onClick={handleCanvasUndo}>
+                            Undo
+                    </button>
+                    <button className="button inverted toolbar-button" onClick={handleCanvasClear}>Clear Board</button>
 
-                <RangePicker label="Stroke Width" value={state.penSize} setValue={handlePenWidthChange}/>
+                    <RangePicker label="Stroke Width" value={state.penSize} setValue={handlePenWidthChange}/>
 
-                <ColorPicker label="Stroke Color" value={state.penColor} setValue={handlePenColorChange} />
+                    <ColorPicker label="Stroke Color" value={state.penColor} setValue={handlePenColorChange} />
 
-                <ColorPicker label="Fill Color" value={state.fillColor} setValue={handleFillColorChange} />
+                    <ColorPicker label="Fill Color" value={state.fillColor} setValue={handleFillColorChange} />
 
-                <span className="option-select flex">
-                    <label htmlFor="draw-type">Draw Options</label>
-                    <select id="draw-type" className="draw-type" value={state.drawType} onChange={handleDrawTypeChange}>
-                        <optgroup label="Draw">
-                            <option value="pen">Pen</option>
-                            <option value="line">Lines</option>
-                            {/* <option value="fill">Fill</option> */}
-                            <option value="erase">Erase</option>
-                        </optgroup>
-                        <optgroup label="Stamp">
-                            <option value="rectangle">Rectangle</option>
-                            <option value="ellipse">Ellipse</option>
-                        </optgroup>
-                    </select>
-                </span>
+                    <span className="option-select flex">
+                        <label htmlFor="draw-type">Draw Options</label>
+                        <select id="draw-type" className="draw-type" value={state.drawType} onChange={handleDrawTypeChange}>
+                            <optgroup label="Draw">
+                                <option value="pen">Pen</option>
+                                <option value="line">Lines</option>
+                                {/* <option value="fill">Fill</option> */}
+                                <option value="erase">Erase</option>
+                            </optgroup>
+                            <optgroup label="Stamp">
+                                <option value="rectangle">Rectangle</option>
+                                <option value="ellipse">Ellipse</option>
+                            </optgroup>
+                        </select>
+                    </span>
 
-                <span className="option-select flex">
-                    <label htmlFor="pen-cap">Pen Cap</label>
-                    <select id="pen-cap" className="pen-cap" onChange={handleCapChange}>
-                        <option value="round">rounded</option>
-                        <option value="square">square</option>
-                    </select>
-                </span>
+                    <span className="option-select flex">
+                        <label htmlFor="pen-cap">Pen Cap</label>
+                        <select id="pen-cap" className="pen-cap" onChange={handleCapChange}>
+                            <option value="round">rounded</option>
+                            <option value="square">square</option>
+                        </select>
+                    </span>
 
-                <RangePicker label="Stamp Width" value={state.stampWidth} setValue={handleStampWidthChange} />
+                    <RangePicker label="Stamp Width" value={state.stampWidth} setValue={handleStampWidthChange} />
 
-                <RangePicker label="Stamp Height" value={state.stampHeight} setValue={handleStampHeightChange} />
-            </div>
-            <canvas 
-                className="board" 
-                ref={canvas}
-                // width="1000" 
-                // height="500"
-                // Desktop Mouse Events
-                onMouseDown={handleActionDown}
-                onMouseMove={handleActionMove}
-                onMouseUp={handleActionUp}
-                onMouseOut={handleActionUp}
+                    <RangePicker label="Stamp Height" value={state.stampHeight} setValue={handleStampHeightChange} />
+                </div>
+                <canvas 
+                    className="board" 
+                    ref={canvas}
+                    // width="1000" 
+                    // height="500"
+                    // Desktop Mouse Events
+                    onMouseDown={handleActionDown}
+                    onMouseMove={handleActionMove}
+                    onMouseUp={handleActionUp}
+                    onMouseOut={handleActionUp}
 
-                // Mobile/Tablet Touch events (Does not work for some reason???)
-                onTouchStart={handleActionDown}
-                onTouchMove={handleActionMove}    
-                onTouchEnd={handleActionUp}>
-            </canvas>
-            <div className="toolbar right flex">
-                { user.username === "guest" ? (
+                    // Mobile/Tablet Touch events (Does not work for some reason???)
+                    onTouchStart={handleActionDown}
+                    onTouchMove={handleActionMove}    
+                    onTouchEnd={handleActionUp}>
+                </canvas>
+                <div className="toolbar right flex">
+                    { user.username === "guest" ? (
+                        <div className="toolbar-group flex">
+                            {/* user profile pic */}
+                            {/* <img src={user.profile_img} alt="user profile" /> */}
+                            <Link to="gallery/user/personal" className="button  toolbar-button">View your Gallery</Link>
+                            <button 
+                                className="button inverted toolbar-button"
+                                onClick={() => handleOpen("upload")}
+                            >Upload</button>
+                        </div>
+                    ) : (
+                        <div className="toolbar-group flex">
+                            {/* login stuff */}
+                            <button 
+                                className="button toolbar-button" 
+                                onClick={() => handleOpen("login")}
+                            >
+                                Login
+                            </button>
+                            <p>- or -</p>
+                            <button 
+                                className="button inverted toolbar-button" 
+                                onClick={() => handleOpen("signup")}
+                            >
+                                Sign Up
+                            </button>
+                        </div>
+                    )}
+                    {/* user stuff */}
+                    
                     <div className="toolbar-group flex">
-                        {/* user profile pic */}
-                        {/* <img src={user.profile_img} alt="user profile" /> */}
-                        <Link to="gallery/user/personal" className="button  toolbar-button">View your Gallery</Link>
-                        <button className="button inverted toolbar-button">Upload</button>
+                        <Link to="/" className="button toolbar-button">Main Page</Link>
+                        <Link to="gallery" className="button toolbar-button">Galleries</Link>
+                        {/* save */}
+                        <button 
+                            className="button inverted toolbar-button"
+                            onClick={() => handleOpen("save")}
+                        >
+                            Save
+                        </button>
                     </div>
-                ) : (
-                    <div className="toolbar-group flex">
-                        {/* login stuff */}
-                        <button className="button toolbar-button">Login</button>
-                        <p>- or -</p>
-                        <button className="button inverted toolbar-button">Sign Up</button>
-                    </div>
-                )}
-                {/* user stuff */}
-                
-                <div className="toolbar-group flex">
-                    <Link to="/" className="button toolbar-button">Main Page</Link>
-                    <Link to="gallery" className="button toolbar-button">Galleries</Link>
-                    {/* save */}
-                    <a className="button inverted toolbar-button">Save</a>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 
