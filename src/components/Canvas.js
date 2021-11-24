@@ -339,15 +339,17 @@ export default function Canvas() {
                     onTouchEnd={handleActionUp}>
                 </canvas>
                 <div className="toolbar right flex">
-                    { user.username === "guest" ? (
+                    { user.id <= 0 ? (
+                    // { user.id >= 0 ? ( // correct functionality
                         <div className="toolbar-group flex">
-                            {/* user profile pic */}
-                            {/* <img src={user.profile_img} alt="user profile" /> */}
-                            <Link to="gallery/user/personal" className="button  toolbar-button">View your Gallery</Link>
+                            <img className="profile-small" src={user.profile_img} alt="user profile" />
+                            <Link to={`/gallery/user/${user.id}`} className="button  toolbar-button">View your Gallery</Link>
                             <button 
                                 className="button inverted toolbar-button"
                                 onClick={() => handleOpen("upload")}
-                            >Upload</button>
+                            >
+                                Upload
+                            </button>
                         </div>
                     ) : (
                         <div className="toolbar-group flex">

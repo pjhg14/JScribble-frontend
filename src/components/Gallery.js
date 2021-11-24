@@ -74,7 +74,7 @@ const testUsers = [
 
 export default function Gallery() {
     const [queryType, setQueryType] = useState("image")
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState(testImages)
     const [users, setUsers] = useState(testUsers)
     const navigate = useNavigate()
 
@@ -100,7 +100,7 @@ export default function Gallery() {
         return(
             <div className="card flex" key={user.id}>
                 <img 
-                    className="profile-small" 
+                    className="profile-small pointer" 
                     src={user.profile_img} 
                     alt={user.username} 
                     onClick={() => navigate(`user/${user.id}`)}

@@ -349,10 +349,18 @@ body {
     align-items: center;
     width: 100%;
 
-    color: var(--text-color);
+    color: var(--main-accent-color);
     background-color: var(--background-color);
     border: 1px solid var(--main-accent-color);
     border-radius: 0.5rem;
+
+    transition: color 500ms ease, background-color 500ms ease;
+}
+
+.draw-type:hover,
+.draw-type:focus {
+    color: var(--text-color);
+    background-color: var(--main-accent-color);
 }
 
 .pen-cap {
@@ -361,10 +369,19 @@ body {
     align-items: center;
     width: 100%;
 
-    color: var(--text-color);
+    color: var(--main-accent-color);
     background-color: var(--background-color);
     border: 1px solid var(--main-accent-color);
     border-radius: 0.5rem;
+
+    transition: color 500ms ease, background-color 500ms ease;
+
+}
+
+.pen-cap:hover,
+.pen-cap:focus {
+    color: var(--text-color);
+    background-color: var(--main-accent-color);
 }
 
 .board {
@@ -378,6 +395,7 @@ body {
 }
 
 .navigation {
+    --gap: 1rem;
     position: absolute;
     top: 0;
     left: 0;
@@ -508,11 +526,14 @@ body {
 }
 
 .profile-small {
-    cursor: pointer;
-    width: 10rem;
+    max-width: 10rem;
+    max-height: 10rem;
     background-color: var(--text-color);
     border-radius: 9999px;
-    /* height: 10rem; */
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 .results {
@@ -525,8 +546,55 @@ body {
     margin: 0 2vw;
 }
 
+.user-page {
+    --gap: 4rem;
+}
+
+.gallery-item-header {
+    margin: 4rem 0;
+}
+
+.back {
+    margin: auto 0 auto auto;
+    align-self: flex-end;
+}
+
+.gallery-item-header .title {
+    font-size: 4rem;
+}
+
+.profile {
+    --gap: 1rem;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.profile-full {
+    width: 20rem;
+    height: 20rem;
+    background-color: var(--text-color);
+    border-radius: 9999px;
+}
+
 .works {
+    --gap: 1rem;
     grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    align-items: center;
+}
+
+.image-content {
+    grid-template-columns: 2fr 1fr;
+}
+
+.presentation {
+    aspect-ratio: 16 / 9;
+    width: 60vw;
+}
+
+.image-actions {
+    grid-column: span 2;
 }
 
 .error-page {
