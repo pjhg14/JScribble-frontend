@@ -20,6 +20,7 @@ export default function Signup({ signup, addError }) {
         signup({
             username,
             password,
+            profile_img: `https://avatars.dicebear.com/api/croodles-neutral/${username}.svg`
         })
 
         setUsername("")

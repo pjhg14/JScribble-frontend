@@ -5,7 +5,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 
 export default function Portal({authType, closeModal}) {
-    const { setUserParams } = useContext(UserContext)
+    const { setUser } = useContext(UserContext)
     const [errors, setErrors] = useState([])
 
     const errorList = errors.map(error => {
@@ -31,6 +31,7 @@ export default function Portal({authType, closeModal}) {
 
         setErrors([])
         
+        // Get token
         fetch(`${userURL}/${authType}`, {
             method: "POST",
             headers: {
@@ -45,16 +46,27 @@ export default function Portal({authType, closeModal}) {
                     setErrors(payload.details)  
                 } else {
                     localStorage.token = payload.token
-                    setUserParams(payload.user)
-                    closeModal()
+                    
+                    // Get user data from token
+                    fetch(`${userURL}/token`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.token}`
+                        },
+                        body: JSON.stringify(),
+                    })
+                        .then(resp => resp.json())
+                        .then(userData => {
+                            setUser(userData)
+                            closeModal()
+                        })
                 }
             })
     }
 
-    // console.log(user)
-
     return(
-        <>
+        <div className="portal">
             {authType === "login" ? (
                 <Login login={submitCredentials}/>
             ) : (
@@ -65,6 +77,6 @@ export default function Portal({authType, closeModal}) {
                     {errorList}
                 </ul>
             </div>
-        </>
+        </div>
     )
 }

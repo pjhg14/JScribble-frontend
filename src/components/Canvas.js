@@ -351,7 +351,6 @@ export default function Canvas() {
                         </div>
                     ) : (
                         <div className="toolbar-group flex">
-                            {/* login stuff */}
                             <button 
                                 className="button toolbar-button" 
                                 onClick={() => handleOpen("login")}
@@ -367,12 +366,9 @@ export default function Canvas() {
                             </button>
                         </div>
                     )}
-                    {/* user stuff */}
-                    
                     <div className="toolbar-group flex">
                         <Link to="/" className="button toolbar-button">Main Page</Link>
-                        <Link to="gallery" className="button toolbar-button">Galleries</Link>
-                        {/* save */}
+                        <Link to="/gallery" className="button toolbar-button">Galleries</Link>
                         <button 
                             className="button inverted toolbar-button"
                             onClick={() => handleOpen("save")}

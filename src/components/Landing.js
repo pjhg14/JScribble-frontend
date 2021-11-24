@@ -9,7 +9,7 @@ import Modal from "./Modal";
 import Portal from "./Portal";
 import { AnimatePresence } from "framer-motion";
 
-export default function LandingPage() {
+export default function Landing() {
     const { user } = useContext(UserContext)
     const [modalOpen, setModalOpen] = useState(false)
     const [authType, setAuthType] = useState("")

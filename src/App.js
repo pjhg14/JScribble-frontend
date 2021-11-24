@@ -1,9 +1,10 @@
 import { createContext, useEffect, useReducer } from "react";
 import { Route, Routes } from "react-router";
 import Canvas from "./components/Canvas";
-import GalleryPage from "./components/GalleryPage";
+import Gallery from "./components/Gallery";
 import ImageViewer from "./components/ImageViewer";
-import LandingPage from "./components/LandingPage";
+import Landing from "./components/Landing";
+import NullPath from "./components/NullPath";
 import UserGallery from "./components/UserGallery";
 import { initialUserState, userReducer } from "./utils/reducers/userReducer";
 import { loginURL } from "./utils/urls";
@@ -11,10 +12,10 @@ import { loginURL } from "./utils/urls";
 export const UserContext = createContext()
 
 export default function App() {
-    const [user, setUserParams] = useReducer(userReducer, initialUserState)
+    const [user, setUser] = useReducer(userReducer, initialUserState)
 
     useEffect(() => {
-        // upon getting onto landing page check if a token exists
+        // keep user logged in if they have visited before
         if (localStorage.token) {
             // fetch user data
             fetch(loginURL, {
@@ -27,7 +28,7 @@ export default function App() {
                 .then(resp => resp.json())
                 .then(queriedUser => {
                     // set user data
-                    setUserParams({
+                    setUser({
                         type: "login",
                         payload: queriedUser
                     })
@@ -39,15 +40,16 @@ export default function App() {
         <UserContext.Provider value={
             {
                 user,
-                setUserParams
+                setUser
             }
         }>
             <Routes>
-                <Route path="/" element={<LandingPage />} />
+                <Route path="/" element={<Landing />} />
                 <Route path="draw" element={<Canvas />} />
-                <Route path="gallery" element={<GalleryPage />}/>
+                <Route path="gallery" element={<Gallery />}/>
                 <Route path="gallery/user/:userId" element={<UserGallery />} />
-                <Route path="gallery/user/:userId/image/:imageId" element={<ImageViewer />}/>
+                <Route path="gallery/image/:imageId" element={<ImageViewer />}/>
+                <Route path="*" element={<NullPath />} />
             </Routes>
         </UserContext.Provider>
     )

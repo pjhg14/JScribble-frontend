@@ -1,4 +1,5 @@
 export const initialUserState = {
+    id: -1,
     username: "guest",
     profile_img: ""
 }
