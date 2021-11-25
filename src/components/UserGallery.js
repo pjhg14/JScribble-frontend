@@ -30,24 +30,21 @@ export default function UserGallery() {
     }
 
     useEffect(() => {
-        if (parseInt(userId) === user.id) {
-            setIsPersonalGallery(true)
-            setUserData(user)
-            setIsLoaded(true)
+        fetch(`${userURL}/${userId}`)
+            .then(resp => resp.json())
+            .then(queriedUser => {
+                if (queriedUser.error) {
+                    setError(true)
+                } else {
+                    setUserData(queriedUser)
+                    setIsLoaded(true)
+                    setIsPersonalGallery(parseInt(userId) === user.id)
+                }
+            })
 
-        } else {
-            setIsPersonalGallery(false)
-            fetch(`${userURL}/${userId}`)
-                .then(resp => resp.json())
-                .then(queriedUser => {
-                    if (queriedUser.error) {
-                        setError(true)
-                    } else {
-                        setUserData(queriedUser)
-                        setIsLoaded(true)
-                    }
-                })
-        }
+
+
+        
 
     },[user, userId])
 
