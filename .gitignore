@@ -24,3 +24,5 @@ yarn-error.log*
 
 # testing image folder
 /public/assets/testing
+# Local Netlify folder
+.netlify
