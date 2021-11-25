@@ -28,7 +28,7 @@ export default function Landing() {
             <AnimatePresence initial={false} exitBeforeEnter={true}>
                 { modalOpen && 
                     <Modal handleClose={handleClose}>
-                        <Portal authType={authType} handleClose={handleClose}/>    
+                        <Portal authType={authType} closeModal={handleClose}/>    
                     </Modal>
                 }
             </AnimatePresence>
@@ -82,7 +82,7 @@ export default function Landing() {
                 <Divider />
 
                 <section className="landing-section sub-nav flex">
-                    { user.username === "guest" ? (
+                    { user.id <= 0 ? (
                             <>
                                 <Link to="/draw" className="button">Get Started!</Link>
                                 <h3>Share your ideas!</h3>
@@ -92,18 +92,18 @@ export default function Landing() {
                                     <button className="button inverted" onClick={() => handleOpen("signup")}>Signup</button>
                                 </span>
                                 <h3>See other works!</h3>
-                                <Link to="gallery" className="button">Gallery</Link>
+                                <Link to="/gallery" className="button">Gallery</Link>
                             </>
                         ) : (
                             <>
                                 <h3>Share your ideas!</h3>
-                                <button className="button">Create</button>
+                                <Link to="/draw" className="button">Create</Link>
 
                                 <h3>View your profile</h3>
-                                <button className="button">Profile</button>
+                                <Link to={`/gallery/user/${user.id}`} className="button">Profile</Link>
 
                                 <h3>See other works!</h3>
-                                <button className="button">Galleries</button>
+                                <Link to="/gallery" className="button">Galleries</Link>
                             </>
                     )}
                 </section>
@@ -111,19 +111,21 @@ export default function Landing() {
                 <Divider />
 
                 <section className="landing-section">
-                    <p>Created By</p>
+                    <p>Meet the Dev</p>
+                    <br/>
                     <span className="flex">
                         <img className="dev-img" src="assets/PG-profile-pic.jpg" alt="dev-profile"/>
                         <div className="dev-links flex">
                             <h4>Paul Graham Jr.</h4>
                             <span className="flex">
                                 <p className="about flex">
-                                A software developer specializing in the development of frontend, backend, and fullstack web applications 
-                                as well as fullstack and monolithic desktop applications.
-
-                                Enjoys the act of creating useful, in-depth applications that aid in the day to day for 
-                                the end user and further enjoy the mitigation of menial tasks through effieient automation and 
-                                other techniques
+                                An aspiring software developer specializing in the development fullstack web applications and 
+                                fullstack and monolithic desktop applications.
+                                <br/>
+                                <br/>
+                                Enjoys creating useful, in-depth applications that help
+                                the end user by either mitigating the usual menial tasks through efficient automation and 
+                                other techniques or providing joy through entertaining games and activities
                                 </p>
                                 <div className="links flex">
                                     <a className="link flex" href="https://www.linkedin.com/in/pgrahamjr/" target="_blank" rel="noreferrer">

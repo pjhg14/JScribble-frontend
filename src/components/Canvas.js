@@ -269,11 +269,11 @@ export default function Canvas() {
             <AnimatePresence initial={false} exitBeforeEnter={true}>
                 { modalOpen && 
                     <Modal handleClose={handleClose}>
-                        {/* switch between portal and upload */}
+                        {/* switch between portal and upload / save */}
                         { user.username === "guest" && actionType !== "save" ? (
                             <Portal authType={actionType} closeModal={handleClose}/>    
                         ) : (
-                            <ImageForm actionType={actionType} closeModal={handleClose}/>
+                            <ImageForm actionType={actionType} canvasData={canvas.current.toDataURL()} closeModal={handleClose}/>
                         )}
                     </Modal>
                 }
@@ -339,10 +339,12 @@ export default function Canvas() {
                     onTouchEnd={handleActionUp}>
                 </canvas>
                 <div className="toolbar right flex">
-                    { user.id <= 0 ? (
-                    // { user.id >= 0 ? ( // correct functionality
+                    { user.id >= 0 ? ( 
                         <div className="toolbar-group flex">
-                            <img className="profile-small" src={user.profile_img} alt="user profile" />
+                            <span>
+                                <p>{user.username}</p>
+                                <img className="profile-small" src={user.profile_img} alt="user profile" />
+                            </span>
                             <Link to={`/gallery/user/${user.id}`} className="button  toolbar-button">View your Gallery</Link>
                             <button 
                                 className="button inverted toolbar-button"

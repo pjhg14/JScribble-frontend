@@ -4,66 +4,17 @@ import { UserContext } from "../App"
 import { userURL } from "../utils/urls"
 import Navigation from "./Navigation"
 import Loading from "./Loading";
-import NullPath from "./NullPath";
 import Modal from "./Modal"
 import { AnimatePresence } from "framer-motion"
 import UserForm from "./UserForm"
-
-const testImages = [
-    {
-        id: 1,
-        url: "/assets/testing/19222_en_1.jpg",
-        title: "Lorem",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 2,
-        url: "/assets/testing/19305_en_1.jpg",
-        title: "ipsum",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 3,
-        url: "/assets/testing/19653_en_1.jpg",
-        title: "dolor",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 4,
-        url: "/assets/testing/19653_en_1.jpg",
-        title: "dolor",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 5,
-        url: "/assets/testing/19653_en_1.jpg",
-        title: "dolor",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 6,
-        url: "/assets/testing/19653_en_1.jpg",
-        title: "dolor",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    }
-]
+import NullUser from "./NullUser"
 
 export default function UserGallery() {
-    const { user } = useContext(UserContext)
+    const { user, userDispatch } = useContext(UserContext)
     const [isPersonalGallery, setIsPersonalGallery] = useState(false)
-    // const [userData, setUserData] = useState(null)
-    const [userData, setUserData] = useState({
-        id: 1,
-        username: "user1",
-        profile_img: "https://avatars.dicebear.com/api/croodles-neutral/tom.svg"
-    })
-    const [isLoaded, setIsLoaded] = useState(true)
+    const [userData, setUserData] = useState(null)
+    const [isLoaded, setIsLoaded] = useState(false)
+    const [error, setError] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
     const [actionType, setActionType] = useState("")
     const { userId } = useParams()
@@ -79,33 +30,39 @@ export default function UserGallery() {
     }
 
     useEffect(() => {
-        // if (userId === user.id) {
-        //     setIsPersonalGallery(true)
-        //     setUserData(user)
-        // } else {
-        //     setIsPersonalGallery(false)
-        //     fetch(`${userURL}/${userId}`)
-        //         .then(resp => resp.json())
-        //         .then(queriedUser => {
-        //             console.log(queriedUser)
-        //             setUserData(queriedUser)
-        //         })
-        // }
+        if (parseInt(userId) === user.id) {
+            setIsPersonalGallery(true)
+            setUserData(user)
+            setIsLoaded(true)
 
-        // setIsLoaded(true)
+        } else {
+            setIsPersonalGallery(false)
+            fetch(`${userURL}/${userId}`)
+                .then(resp => resp.json())
+                .then(queriedUser => {
+                    if (queriedUser.error) {
+                        setError(true)
+                    } else {
+                        setUserData(queriedUser)
+                        setIsLoaded(true)
+                    }
+                })
+        }
+
     },[user, userId])
+
+    function handleLogOut() {
+        userDispatch({
+            type: "logout"
+        })
+        navigate("/")
+    }
 
     if (!isLoaded) return <Loading />
 
-    if (isLoaded && !userData) return <NullPath />
+    if (error) return <NullUser />
 
-    // const creations = userData.images.map(image => {
-    //     return(
-    //         <div></div>
-    //     )
-    // })
-
-    const testCreations = testImages.map(image => {
+    const creations = userData.images.map(image => {
         return(
             <div className="card flex" key={image.id}>
                 <img 
@@ -137,17 +94,16 @@ export default function UserGallery() {
                 <main className="flex">
                     <section className="profile flex">
                         <img className="profile-full" src={userData.profile_img} alt={userData.username} />
-                        {/* {isPersonalGallery &&  */}
-                        {true && 
+                        {isPersonalGallery && 
                             <>
                                 <button className="button" onClick={() => handleOpen("upload")}>Upload image</button>
                                 <button className="button" onClick={() => handleOpen("update")}>Change username</button>
+                                <button className="button inverted" onClick={handleLogOut}>Log Out</button>
                             </>
                         }
                     </section>
                     <section className="works grid">
-                        {/* list of creations */}
-                        { testCreations }
+                        { creations }
                     </section>
                 </main>
             </div>

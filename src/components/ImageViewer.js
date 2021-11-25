@@ -1,32 +1,26 @@
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
-import { UserContext } from "../App"
+// import { UserContext } from "../App"
 import { imageURL } from "../utils/urls"
 import Navigation from "./Navigation"
 import Loading from "./Loading";
+import { Link } from "react-router-dom";
 
 export default function ImageViewer() {
-    const { user } = useContext(UserContext)
+    // const { user } = useContext(UserContext)
     const { imageId } = useParams()
-    // const [image, setImage] = useState(null)
-    const [image, setImage] = useState({
-        id: 1,
-        url: "/assets/testing/19222_en_1.jpg",
-        title: "Lorem",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    })
-    const [isLoaded, setIsLoaded] = useState(true)
+    const [image, setImage] = useState(null)
+    const [isLoaded, setIsLoaded] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
-        // fetch(`${imageURL}/${imageId}`)
-        //     .then(resp => resp.json())
-        //     .then(queriedImage => {
-        //         setImage(queriedImage)
-        //         setIsLoaded(true)
-        //     })
-    },[])
+        fetch(`${imageURL}/${imageId}`)
+            .then(resp => resp.json())
+            .then(queriedImage => {
+                setImage(queriedImage)
+                setIsLoaded(true)
+            })
+    },[imageId])
 
     if (!isLoaded) return <Loading />
 
@@ -34,7 +28,10 @@ export default function ImageViewer() {
         <div className="gallery">
             <Navigation />
             <header className="gallery-item-header flex">
-                <h1 className="title">{image.title}</h1>
+                <div>
+                    <h1 className="title">{image.title}</h1>
+                    <h2>By <Link to={`/gallery/user/${image.user.id}`}>{image.user.username}</Link></h2>
+                </div>
                 <button className="button back" onClick={() => navigate(-1)}>Back</button>
             </header>
             <section className="image-content grid">
@@ -43,7 +40,7 @@ export default function ImageViewer() {
                     <h2>Description</h2>
                     <p>{image.description ? image.description : "No description given"}</p>
                 </div>
-                {/* TODO: update image params */}
+                {/* TODO: update image params, delete image (if user is owner) */}
             </section>
         </div>
     )

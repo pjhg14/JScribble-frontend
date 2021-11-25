@@ -1,85 +1,18 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router";
-import { imageURL } from "../utils/urls";
+import { imageURL, userURL } from "../utils/urls";
 import Divider from "./Divider";
 import Navigation from "./Navigation";
 
-const testImages = [
-    {
-        id: 1,
-        url: "assets/testing/19222_en_1.jpg",
-        title: "Lorem",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 2,
-        url: "assets/testing/19305_en_1.jpg",
-        title: "ipsum",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 3,
-        url: "assets/testing/19653_en_1.jpg",
-        title: "dolor",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 4,
-        url: "assets/testing/19653_en_1.jpg",
-        title: "dolor",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 5,
-        url: "assets/testing/19653_en_1.jpg",
-        title: "dolor",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    },
-    {
-        id: 6,
-        url: "assets/testing/19653_en_1.jpg",
-        title: "dolor",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, repellat?",
-        private: false
-    }
-]
-
-const testUsers = [
-    {
-        id: 1,
-        username: "user1",
-        profile_img: "https://avatars.dicebear.com/api/croodles-neutral/tom.svg"
-    },
-    {
-        id: 2,
-        username: "user2",
-        profile_img: "https://avatars.dicebear.com/api/croodles-neutral/harry.svg"
-    },
-    {
-        id: 3,
-        username: "user3",
-        profile_img: "https://avatars.dicebear.com/api/croodles-neutral/sarah.svg"
-    },
-    {
-        id: 4,
-        username: "user4",
-        profile_img: "https://avatars.dicebear.com/api/croodles-neutral/alex.svg"
-    }
-]
-
 export default function Gallery() {
     const [queryType, setQueryType] = useState("image")
-    const [images, setImages] = useState(testImages)
-    const [users, setUsers] = useState(testUsers)
+    const [query, setQuery] = useState("")
+    const [images, setImages] = useState([])
+    const [users, setUsers] = useState([])
     const navigate = useNavigate()
 
     useEffect(() => {
-        // sampleImages()
+        sampleImages()
     },[])
 
     const imageCards = images.map(image => {
@@ -123,18 +56,18 @@ export default function Gallery() {
         event.preventDefault()
 
         if (queryType === "image") {
-            fetch()
+            fetch(`${imageURL}/find/${query}`)
                 .then(resp => resp.json())
                 .then(queriedImages => {
                     setImages(queriedImages)
                     setUsers([])
                 })
         } else {
-            fetch("query users")
+            fetch(`${userURL}/find/${query}`)
                 .then(resp => resp.json())
-                .then(queriedImages => {
+                .then(queriedUsers => {
                     setImages([])
-                    setUsers(queriedImages)
+                    setUsers(queriedUsers)
                 })
         }        
     }
@@ -144,7 +77,7 @@ export default function Gallery() {
             <Navigation />
             <header className="gallery-header flex">
                 <h1 className="title">Gallery</h1>
-                <p className="sub-title">Search for creations or users</p>
+                <p className="sub-title"></p>
             </header>
             <section className="flex">
                 <span className="search-bar flex">
@@ -153,8 +86,14 @@ export default function Gallery() {
                         <option value="user">users</option>
                     </select>
                     <form role="search" onSubmit={handleFormSubmit}>
-                        <input className="sb-item middle" type="search" placeholder="search" aria-label="search users or images" />
-                        <input className="sb-item end" type="submit" />
+                        <input 
+                            className="sb-item middle" 
+                            type="search" placeholder="Search images & users" 
+                            aria-label="search users or images" 
+                            value={query}
+                            onChange={e => setQuery(e.target.value)}
+                        />
+                        <button className="sb-item end" type="submit">search</button>
                     </form>
                 </span>
                     <button className="button" onClick={sampleImages}>Sample</button>

@@ -17,24 +17,33 @@ export default function Login({ login }) {
     }
 
     return(
-        <form className="login" onSubmit={onFormSubmit}>
-            <label htmlFor="username">Username</label>
-            <input
-                id="username"
-                type="text" 
-                value={username} 
-                onChange={e => setUsername(e.target.value)}
-            />
+        <div className="login flex">
+            <h1>Login</h1>
+            <form className="form flex" onSubmit={onFormSubmit}>
+                <span className="form-field flex">
+                    <label htmlFor="username">Username</label>
+                    <input
+                        className="text-field"
+                        id="username"
+                        type="text" 
+                        value={username} 
+                        onChange={e => setUsername(e.target.value)}
+                    />
+                </span>
 
-            <label htmlFor="password">Password</label>
-            <input
-                id="password"
-                type="password" 
-                value={password} 
-                onChange={e => setPassword(e.target.value)}
-            />
+                <span className="form-field flex">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        className="text-field"
+                        id="password"
+                        type="password" 
+                        value={password} 
+                        onChange={e => setPassword(e.target.value)}
+                    />
+                </span>
 
-            <input className="button" type="submit" />
-        </form>
+                <button className="button" type="submit">Login</button>
+            </form>
+        </div>
     )
 }

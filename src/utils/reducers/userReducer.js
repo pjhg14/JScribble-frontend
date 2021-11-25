@@ -1,30 +1,23 @@
 export const initialUserState = {
     id: -1,
     username: "guest",
-    profile_img: ""
+    profile_img: "",
+    images: []
 }
 
 export function userReducer(state, action) {
     switch (action.type) {
-        case "login":
+        case "setUser":
             return action.payload
 
         case "logout":
+            localStorage.removeItem("token")
+
             return {
+                id: -1,
                 username: "guest",
-                profile_img: ""
-            }
-
-        case "changeUsername":
-            return {
-                ...state,
-                username: action.payload
-            }
-
-        case "uploadUserProfile":
-            return {
-                ...state,
-                profile_img: action.payload
+                profile_img: "",
+                images: []
             }
     
         default:

@@ -5,12 +5,12 @@ import Login from "./Login";
 import Signup from "./Signup";
 
 export default function Portal({authType, closeModal}) {
-    const { setUser } = useContext(UserContext)
+    const { userDispatch } = useContext(UserContext)
     const [errors, setErrors] = useState([])
 
     const errorList = errors.map(error => {
         return(
-            <li key={error}>
+            <li className="error" key={error}>
                 {error}
             </li>
         )
@@ -24,7 +24,7 @@ export default function Portal({authType, closeModal}) {
     }
 
     function submitCredentials(credentials) {
-        if (!(authType !== "login" && authType !== "signup")) {
+        if (authType !== "login" && authType !== "signup") {
             setErrors(["Invalid auth Type"])
             return
         }
@@ -32,7 +32,7 @@ export default function Portal({authType, closeModal}) {
         setErrors([])
         
         // Get token
-        fetch(`${userURL}/${authType}`, {
+        fetch(`${userURL}/${authType === "login" ? "login" : ""}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -49,16 +49,18 @@ export default function Portal({authType, closeModal}) {
                     
                     // Get user data from token
                     fetch(`${userURL}/token`, {
-                        method: "POST",
+                        method: "GET",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${localStorage.token}`
-                        },
-                        body: JSON.stringify(),
+                        }
                     })
                         .then(resp => resp.json())
                         .then(userData => {
-                            setUser(userData)
+                            userDispatch({
+                                type: "setUser",
+                                payload: userData
+                            })
                             closeModal()
                         })
                 }
@@ -66,14 +68,15 @@ export default function Portal({authType, closeModal}) {
     }
 
     return(
-        <div className="portal">
+        <div className="portal flex ">
             {authType === "login" ? (
                 <Login login={submitCredentials}/>
             ) : (
                 <Signup signup={submitCredentials} addError={addError}/>
             )}
-            <div className="error-box">
-                <ul>
+            <div className={`error-box ${errorList.length > 0 ? "" : "hidden"}`}>
+                <h2>Error:</h2>
+                <ul className="errors">
                     {errorList}
                 </ul>
             </div>

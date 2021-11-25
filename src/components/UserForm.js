@@ -1,12 +1,21 @@
 import { useContext, useState } from "react"
 import { UserContext } from "../App"
-import { credURL, userURL } from "../utils/urls"
+import { userURL } from "../utils/urls"
 
 export default function UserForm({ actionType, closeModal }) {
-    const { user, setUser } = useContext(UserContext)
+    const { user, userDispatch } = useContext(UserContext)
     const [username, setUsername] = useState(user.username)
     const [file, setFile] = useState(null)
     const [imageName, setImageName] = useState(user.profile_img)
+    const [errors, setErrors] = useState([])
+
+    const errorList = errors.map(error => {
+        return(
+            <li key={error}>
+                {error}
+            </li>
+        )
+    })
 
     function handleFormSubmit(event) {
         event.preventDefault()
@@ -19,7 +28,7 @@ export default function UserForm({ actionType, closeModal }) {
     }
 
     function handleImageUpload() {
-        fetch(`${credURL}/upload`, {
+        fetch(`${userURL}/upload`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -30,12 +39,20 @@ export default function UserForm({ actionType, closeModal }) {
             }),
         })
             .then(resp => resp.json())
-            .then(updatedUser => setUser(updatedUser))
+            .then(updatedUser => {
+                userDispatch({
+                    type: "setUser",
+                    payload: updatedUser
+                })
+
+                closeModal()
+            })
     }
 
     function handleUsernameUpdate() {
+        // TODO: handle update errors
         fetch(`${userURL}/${user.id}`, {
-            method: "POST",
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.token}`
@@ -45,7 +62,18 @@ export default function UserForm({ actionType, closeModal }) {
             }),
         })
             .then(resp => resp.json())
-            .then(updatedUser => setUser(updatedUser))
+            .then(updatedUser => {
+                if (updatedUser.error) {
+                    setErrors(updatedUser.details)
+                } else {
+                    userDispatch({
+                        type: "setUser",
+                        payload: updatedUser
+                    })
+
+                    closeModal()
+                }
+            })
     }
 
     function handleImageSelection(event) {
@@ -56,29 +84,41 @@ export default function UserForm({ actionType, closeModal }) {
     }
 
     return(
-        <form onSubmit={handleFormSubmit}>
-            { actionType === "upload" ? (
-                <div>
-                    <label>Upload Image</label>
-                    <input 
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageSelection}
-                    />
-                </div>
-            ) : (
-                <div>
-                    <label>Change Username</label>
-                    <input 
-                        type="text"
-                        value={username}
-                        onChange={e => setUsername(e.target.value)}
-                    />
-                    <p>{imageName}</p>
-                </div>
-            )}
+        <div>
+            <form className="flex column center" onSubmit={handleFormSubmit}>
+                { actionType === "upload" ? (
+                    <span className="flex">
+                        <label className="iu-label" htmlFor="image-uploader">Upload Image</label>
+                        <input
+                            id="image-uploader"
+                            className="image-uploader"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageSelection}
+                        />
+                        <p>{imageName ? imageName : "No file Chosen"}</p>
+                    </span>
+                ) : (
+                    <span className="form-field flex">
+                        <label htmlFor="username">Change Username</label>
+                        <input
+                            className="text-field"
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={e => setUsername(e.target.value)}
+                        />
+                    </span>
+                )}
 
-            <button className="button" type="submit">{actionType}</button>
-        </form>
+                <button className="button" type="submit">{actionType}</button>
+            </form>
+            <div className={`error-box ${errorList.length > 0 ? "" : "hidden"}`}>
+                <h2>Error:</h2>
+                <ul>
+                    {errorList}
+                </ul>
+            </div>
+        </div>
     )
 }

@@ -29,32 +29,44 @@ export default function Signup({ signup, addError }) {
     }
 
     return(
-        <form className="signup" onSubmit={onFormSubmit}>
-            <label htmlFor="username">Username</label>
-            <input 
-                id="username"
-                type="text"
-                value={username} 
-                onChange={e => setUsername(e.target.value)}
-            />
+        <div className="signup flex">
+            <h1>Sign-up</h1>
+            <form className="form flex" onSubmit={onFormSubmit}>
+                <span className="form-field flex">
+                    <label htmlFor="username">Username</label>
+                    <input
+                        className="text-field"
+                        id="username"
+                        type="text"
+                        value={username} 
+                        onChange={e => setUsername(e.target.value)}
+                    />
+                </span>
 
-            <label htmlFor="password">Password</label>
-            <input 
-                id="password"
-                type="password" 
-                value={password} 
-                onChange={e => setPassword(e.target.value)}
-            />
+                <span className="form-field flex">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        className="text-field"
+                        id="password"
+                        type="password" 
+                        value={password} 
+                        onChange={e => setPassword(e.target.value)}
+                    />
+                </span>
 
-            <label htmlFor="password-conf">Verify Password</label>
-            <input 
-                id="password-conf"
-                type="password" 
-                value={passwordConf} 
-                onChange={e => setPasswordConf(e.target.value)}
-            />
+                <span className="form-field flex">
+                    <label htmlFor="password-conf">Verify Password</label>
+                    <input
+                        className="text-field"
+                        id="password-conf"
+                        type="password" 
+                        value={passwordConf} 
+                        onChange={e => setPasswordConf(e.target.value)}
+                    />
+                </span>
 
-            <input className="button" type="submit" />
-        </form>
+                <button className="button" type="submit">Sign-up</button>
+            </form>
+        </div>
     )
 }

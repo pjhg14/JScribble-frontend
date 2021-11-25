@@ -34,6 +34,14 @@ body {
     overflow-x: hidden;
 }
 
+a {
+    color: inherit;
+}
+
+a:hover {
+    box-shadow: inset 0 0 999px 999px rgba(255, 255, 255, 0.5);
+}
+
 ::-webkit-scrollbar {
     width: 0.5rem;
 
@@ -51,9 +59,26 @@ body {
     gap: var(--gap, 1rem);
 }
 
+.column {
+    flex-direction: column;
+}
+
 .grid {
     display: grid;
     gap: var(--gap, 1rem);
+}
+
+.center {
+    justify-content: center;
+    align-items: center;
+}
+
+.gap-none {
+    --gap: 0;
+}
+
+.gap-half {
+    --gap: 0.5rem;
 }
 
 .button {
@@ -121,12 +146,11 @@ body {
 
 .modal {
     width: clamp(50vw, 50rem, 90vw);
-    height: min(50vw, 8rem);
     background-color: var(--background-color);
     color: var(--main-accent-color);
     border: 1px solid var(--main-accent-color);
     margin: auto;
-    padding: 0 2rem;
+    padding: 1rem 2rem;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -399,7 +423,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: auto;
     background-color: var(--main-accent-color);
 }
@@ -424,7 +448,11 @@ body {
 }
 
 .nav-user {
-    margin: auto;
+    cursor: pointer;
+    max-width: 3rem;
+    margin-left: auto;
+    background-color: var(--text-color);
+    border-radius: 9999px;
 }
 
 /* Gallery page */
@@ -596,6 +624,158 @@ body {
 .image-actions {
     grid-column: span 2;
 }
+
+/* Modal Component styles */
+.portal {
+    flex-direction: column;
+}
+
+.error-box {
+    padding: 0.5em 1em;
+    color: red;
+    background-color: hsl(0 40% 50% / 0.5);
+    border-radius: 1rem;
+    border: 1px solid red;
+
+}
+
+.errors {
+    margin-left: 1.1rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.login {
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup {
+    flex-direction: column;
+    align-items: center;
+}
+
+.form {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-field {
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.text-field {
+    padding: 0.5rem 1rem;
+    color: var(--main-accent-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--main-accent-color);
+    border-radius: 0.5rem;
+
+    transition: color 500ms ease, background-color 500ms ease;
+}
+
+.text-field:hover,
+.text-field:focus {
+    color: var(--background-color);
+    background-color: var(--text-color);
+}
+
+.image-preview {
+    aspect-ratio: 16 / 9;
+    width: 50vw;
+    background-color: white;
+    border: 1px solid var(--main-accent-color);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.image-input {
+    justify-content: center;
+    align-items: center;
+}
+
+.image-input-end {
+    --gap: 0;
+}
+
+.image-name {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--main-accent-color);
+    border-radius: 0.5rem 0 0 0.5rem;
+    color: var(--main-accent-color);
+    background-color: var(--background-color);
+
+    transition: color 500ms ease, background-color 500ms ease;
+}
+
+.image-name:hover,
+.image-name:focus {
+    color: var(--background-color);
+    background-color: var(--text-color);
+}
+
+.image-suffix {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid var(--main-accent-color);
+    border-right: 1px solid var(--main-accent-color);
+    border-bottom: 1px solid var(--main-accent-color);
+    border-radius: 0 0.5rem 0.5rem 0;
+
+}
+
+.image-uploader {
+    display: none;
+}
+
+.iu-label::after {
+    content: 'Choose File';
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+    padding: 0.5em 2em;
+    margin: 0.5rem 0 0 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--main-accent-color);
+    color: var(--text-color);
+    background-color: var(--main-accent-color);
+
+    transition: 
+        color 500ms ease, 
+        border-color 500ms ease, 
+        background-color 500ms ease, 
+        box-shadow 500ms ease;
+}
+
+.iu-label:hover.iu-label::after {
+    box-shadow: inset 0 0 999px 999px rgba(255, 255, 255, 0.5);
+}
+
+.check-field {
+    accent-color: var(--main-accent-color);
+}
+
+.textarea-field {
+    resize: none;
+    padding: 0.5rem 1rem;
+    color: var(--main-accent-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--main-accent-color);
+    border-radius: 0.5rem;
+
+    transition: color 500ms ease, background-color 500ms ease;
+}
+
+.textarea-field:hover,
+.textarea-field:focus {
+    color: var(--background-color);
+    background-color: var(--text-color);
+}
+/* END Modal Component styles */
 
 .error-page {
     position: fixed;

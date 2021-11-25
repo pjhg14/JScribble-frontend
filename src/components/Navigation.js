@@ -17,7 +17,7 @@ export default function Navigation() {
             <NavLink className="nav-link" to="/gallery" >Gallery</NavLink>
             {/* user profile/gallery */}
             {user.id > 0 && 
-                <img className="nav-user" src={user.image} alt="profile" onClick={() => navigate(`/user/${user.id}`)} />
+                <img className="nav-user" src={user.profile_img} alt="profile" onClick={() => navigate(`/gallery/user/${user.id}`)} />
             }
         </nav>
     )

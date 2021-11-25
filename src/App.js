@@ -7,18 +7,18 @@ import Landing from "./components/Landing";
 import NullPath from "./components/NullPath";
 import UserGallery from "./components/UserGallery";
 import { initialUserState, userReducer } from "./utils/reducers/userReducer";
-import { loginURL } from "./utils/urls";
+import { userURL } from "./utils/urls";
 
 export const UserContext = createContext()
 
 export default function App() {
-    const [user, setUser] = useReducer(userReducer, initialUserState)
+    const [user, userDispatch] = useReducer(userReducer, initialUserState)
 
     useEffect(() => {
         // keep user logged in if they have visited before
-        if (localStorage.token) {
+        if (localStorage.token && user.id <= 0) {
             // fetch user data
-            fetch(loginURL, {
+            fetch(`${userURL}/token`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -28,19 +28,19 @@ export default function App() {
                 .then(resp => resp.json())
                 .then(queriedUser => {
                     // set user data
-                    setUser({
-                        type: "login",
+                    userDispatch({
+                        type: "setUser",
                         payload: queriedUser
                     })
                 })
         }
-    },[])
+    },[user.id])
 
     return (
         <UserContext.Provider value={
             {
                 user,
-                setUser
+                userDispatch
             }
         }>
             <Routes>
