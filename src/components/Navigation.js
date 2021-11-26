@@ -9,16 +9,32 @@ export default function Navigation() {
 
     return(
         <nav className="navigation flex">
-            {/* landing */}
-            <NavLink className="nav-link" to="/">Main</NavLink>
-            {/* Draw */}
-            <NavLink className="nav-link" to="/draw">Draw</NavLink>
-            {/* gallery */}
-            <NavLink className="nav-link" to="/gallery" >Gallery</NavLink>
-            {/* user profile/gallery */}
-            {user.id > 0 && 
-                <img className="nav-user" src={user.profile_img} alt="profile" onClick={() => navigate(`/gallery/user/${user.id}`)} />
-            }
+            <ul>
+                <li>
+                    <NavLink className="nav-link" to="/">Main</NavLink>
+                </li>
+                <li>
+                    <NavLink className="nav-link" to="/draw">Draw</NavLink>
+                </li>
+                <li>
+                    <NavLink className="nav-link" to="/gallery" >Gallery</NavLink>
+                </li>
+                <li>
+                    {user.id > 0 && 
+                        <img 
+                            className="nav-user" 
+                            src={user.profile_img} 
+                            alt="profile" 
+                            onClick={() => navigate(`/gallery/user/${user.id}`)} 
+                        />
+                    }
+                </li>
+            </ul>
+           
+          
+         
+  
+            
         </nav>
     )
 }

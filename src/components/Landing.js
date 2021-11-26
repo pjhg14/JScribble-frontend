@@ -35,16 +35,17 @@ export default function Landing() {
             <div className="landing flex">
                 <header className="header flex">
                     <div>
-                        <h1 className="title">JScribble</h1>
-                        <p className="sub-title">The online doodling app</p>
+                        <h1 className="title flex center">JScribble</h1>
+                        <p className="sub-title flex center">The online doodling app</p>
                     </div>
                     
                     {/* Demo video */}
                     <img className="demo-img" src="assets/JScribbleCanvas.gif" alt="demo"/>
                     {/* <div className="demo-img"></div> */}
                 </header>
-                <section className="landing-section">
+                <section className="landing-section flex column">
                     <h2>Create</h2>
+
                     <p>
                         Express yourself using our draw board. 
                         Freely draw, sketch out with lines, erase mistakes or smooth out jagged edges, 
@@ -54,7 +55,7 @@ export default function Landing() {
 
                 <Divider />
 
-                <section className="landing-section">
+                <section className="landing-section flex column">
                     <h2>Save & Share</h2>
                     <p>
                         Save and download your work as a .png file or upload your creations to your own gallery. 
@@ -64,14 +65,14 @@ export default function Landing() {
 
                 <Divider />
 
-                <section className="landing-section">
+                <section className="landing-section flex column">
                     <h2>Explore</h2>
                     <p>View you own or other people's works in the gallery page</p>
                 </section>
 
                 <Divider />
 
-                <section className="landing-section">
+                <section className="landing-section flex column">
                     <h2>How To?</h2>
                     <p>
                         Use the toolbar on the left to change the drawing method and the parameters for that method. 
@@ -88,7 +89,7 @@ export default function Landing() {
                                 <h3>Share your ideas!</h3>
                                 <span className="portal-bar flex">
                                     <button className="button" onClick={() => handleOpen("login")}>Login</button>
-                                    <p>- or -</p>
+                                    <p>or</p>
                                     <button className="button inverted" onClick={() => handleOpen("signup")}>Signup</button>
                                 </span>
                                 <h3>See other works!</h3>
@@ -110,44 +111,40 @@ export default function Landing() {
 
                 <Divider />
 
-                <section className="landing-section">
-                    <p>Meet the Dev</p>
-                    <br/>
-                    <span className="flex">
-                        <img className="dev-img" src="assets/PG-profile-pic.jpg" alt="dev-profile"/>
-                        <div className="dev-links flex">
+                <section className="landing-section flex column">
+                    <h3>Meet the Dev</h3>
+
+                    <Divider />
+
+                    <span className="about flex">
+                        <div className="dev-card flex column">
                             <h4>Paul Graham Jr.</h4>
-                            <span className="flex">
-                                <p className="about flex">
-                                An aspiring software developer specializing in the development fullstack web applications and 
-                                fullstack and monolithic desktop applications.
-                                <br/>
-                                <br/>
-                                Enjoys creating useful, in-depth applications that help
-                                the end user by either mitigating the usual menial tasks through efficient automation and 
-                                other techniques or providing joy through entertaining games and activities
-                                </p>
-                                <div className="links flex">
-                                    <a className="link flex" href="https://www.linkedin.com/in/pgrahamjr/" target="_blank" rel="noreferrer">
-                                        LinkedIn
-                                        <FontAwesomeIcon className="icon linkedin" icon={faLinkedin}/>
-                                    </a>
-                                    <a className="link flex" href="https://github.com/pjhg14" target="_blank" rel="noreferrer">
-                                        GitHub
-                                        <FontAwesomeIcon className="icon" icon={faGithub} />
-                                    </a>
-                                    <a className="link flex" href="https://paulgrahamjr.com/" target="_blank" rel="noreferrer">
-                                        Portfolio
-                                        <img className="personal-icon" src="assets/initial-logo-dark.png" alt="logo"/>
-                                    </a>
-                                </div>
-                            </span>
-                            
+                            <img className="dev-img" src="assets/PG-profile-pic.jpg" alt="dev-profile"/>
                         </div>
+
+                        <p className="dev-text flex center">
+                            An aspiring software developer specializing in the development fullstack web applications and 
+                            fullstack and monolithic desktop applications.
+                        </p>
+                        <div className="links flex center">
+                            <a className="link flex" href="https://www.linkedin.com/in/pgrahamjr/" target="_blank" rel="noreferrer">
+                                LinkedIn
+                                <FontAwesomeIcon className="icon linkedin" icon={faLinkedin}/>
+                            </a>
+                            <a className="link flex" href="https://github.com/pjhg14" target="_blank" rel="noreferrer">
+                                GitHub
+                                <FontAwesomeIcon className="icon" icon={faGithub} />
+                            </a>
+                            <a className="link flex" href="https://paulgrahamjr.com/" target="_blank" rel="noreferrer">
+                                Portfolio
+                                <img className="personal-icon" src="assets/initial-logo-dark.png" alt="logo"/>
+                            </a>
+                        </div>
+                            
                     </span>
                 </section>
                 <footer className="footer flex">
-                    This app was made for one of mintbean's hackathons, check them out
+                    A mintbean hackathons enterant, main site
                     <a className="mb-link" href="https://mintbean.io" target="_blank" rel="noreferrer"> here</a>
                 </footer>
             </div>

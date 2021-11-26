@@ -17,7 +17,7 @@ export default function Gallery() {
 
     const imageCards = images.map(image => {
         return(
-            <div className="card flex" key={image.id}>
+            <div className="card flex column center" key={image.id}>
                 <img 
                     className="image-small" 
                     src={image.url} 
@@ -73,40 +73,42 @@ export default function Gallery() {
     }
 
     return(
-        <div className="gallery flex">
+        <>
             <Navigation />
-            <header className="gallery-header flex">
-                <h1 className="title">Gallery</h1>
-                <p className="sub-title"></p>
-            </header>
-            <section className="flex">
-                <span className="search-bar flex">
-                    <select className="sb-item start" onChange={e => setQueryType(e.target.value)}>
-                        <option value="image">images</option>
-                        <option value="user">users</option>
-                    </select>
-                    <form role="search" onSubmit={handleFormSubmit}>
-                        <input 
-                            className="sb-item middle" 
-                            type="search" placeholder="Search images & users" 
-                            aria-label="search users or images" 
-                            value={query}
-                            onChange={e => setQuery(e.target.value)}
-                        />
-                        <button className="sb-item end" type="submit">search</button>
-                    </form>
-                </span>
-                    <button className="button" onClick={sampleImages}>Sample</button>
-            </section>
+            <main className="gallery flex">
+                <header className="gallery-header flex">
+                    <h1 className="title">Gallery</h1>
+                    <p className="sub-title"></p>
+                </header>
+                <section className="flex">
+                    <span className="search-bar flex">
+                        <select className="sb-item start" onChange={e => setQueryType(e.target.value)}>
+                            <option value="image">images</option>
+                            <option value="user">users</option>
+                        </select>
+                        <form role="search" onSubmit={handleFormSubmit}>
+                            <input 
+                                className="sb-item middle" 
+                                type="search" placeholder="Search images & users" 
+                                aria-label="search users or images" 
+                                value={query}
+                                onChange={e => setQuery(e.target.value)}
+                            />
+                            <button className="sb-item end" type="submit">search</button>
+                        </form>
+                    </span>
+                        <button className="button" onClick={sampleImages}>Sample</button>
+                </section>
 
-            <Divider />
+                <Divider />
 
-            <section className="results flex">
-                <div className="result-list grid">
-                    {imageCards}
-                    {userCards}
-                </div>
-            </section>
-        </div>
+                <section className="results flex">
+                    <div className="result-list grid">
+                        {imageCards}
+                        {userCards}
+                    </div>
+                </section>
+            </main>
+        </>
     )
 }
