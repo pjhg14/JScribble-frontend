@@ -1,10 +1,6 @@
-import Navigation from "./Navigation";
-
-export default function name() {
+export default function Loading() {
+    // Pure CSS Loader obtained from loading.io
     return(
-        <>
-            <Navigation />
-            <h1 className="loading">Loading...</h1>
-        </>
+        <div className="loading"></div>
     )
 }

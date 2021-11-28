@@ -110,7 +110,7 @@ export default function Canvas() {
                 drawEnd(state, userDispatch)
                 break;
             case "line":
-                lineEnd(event, state, dispatch)
+                lineEnd(event, state, userDispatch)
                 break
             case "fill":
                 if (event.type === 'mouseout') return
@@ -118,7 +118,7 @@ export default function Canvas() {
                 // Fill(event)
                 break
             case "erase":
-                eraseEnd(state, dispatch)
+                eraseEnd(state, userDispatch)
                 break
             case "rectangle":
                 rectStamp(event, state)
@@ -127,7 +127,7 @@ export default function Canvas() {
                 ellipseStamp(event, state)
                 break
             default:
-                dispatch({
+                userDispatch({
                     type: "setDrawType",
                     payload: "pen"
                 })
@@ -137,7 +137,7 @@ export default function Canvas() {
         // if end of drawing was NOT due to the mouse leaving the canvas
         if (event.type !== 'mouseout') {
             // add drawn path to last path
-            dispatch({
+            userDispatch({
                 type: "addLastPath",
                 payload: state.context.getImageData(0, 0, state.canvasRect.width, state.canvasRect.height)
             })

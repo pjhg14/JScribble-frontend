@@ -184,11 +184,35 @@ a:hover {
 
 .loading {
     position: fixed;
-
-    /* center */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    width: var(--fs-700);
+    height: var(--fs-700);
+}
+
+.loading::after {
+    content: '';
+    display: block;
+    width: 4rem;
+    height: 4rem;
+    margin: 1rem;
+    border-radius: 50%;
+    border: 6px solid white;
+    border-color: white transparent white transparent;
+
+    animation: dual-ring 1.2s linear infinite;
+}
+
+@keyframes dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .footer {
@@ -485,14 +509,28 @@ a:hover {
     top: 0;
     left: 0;
     width: 100%;
-    height: auto;
     background-color: var(--main-accent-color);
+}
+
+.navigation ul {
+    width: 100%;
+}
+
+.nav-item {
+    padding: 0.7rem 0;
+    list-style: none;
+    height: max-content;
+}
+
+.last-item {
+    margin-left: auto;
+    margin-right: 1rem;
 }
 
 .nav-link {
     color: var(--text-color);
-    padding: 0.5em 2em;
-    margin: 0.3rem;
+    padding: 0.5rem 2rem;
+    margin: 0.5em;
     border-radius: var(--rounded);
 
     transition: color 500ms ease, background-color 500ms ease, box-shadow 500ms ease;
@@ -510,7 +548,8 @@ a:hover {
 
 .nav-user {
     cursor: pointer;
-    max-width: 3rem;
+    text-decoration: none;
+    width: 2rem;
     margin-left: auto;
     background-color: var(--text-color);
     border-radius: var(--rounded);
@@ -662,6 +701,7 @@ a:hover {
 }
 
 .results {
+    position: relative;
     flex-direction: column;
     align-items: center;
 }

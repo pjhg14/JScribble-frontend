@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 // import { UserContext } from "../App"
 import { imageURL } from "../utils/urls"
 import Navigation from "./Navigation"
-import Loading from "./Loading";
+import Loading from "./LoadingPage";
 
 export default function ImageViewer() {
     // const { user } = useContext(UserContext)

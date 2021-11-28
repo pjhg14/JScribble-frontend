@@ -7,28 +7,31 @@ export default function Navigation() {
     const { user } = useContext(UserContext)
     const navigate = useNavigate()
 
+    console.log({user})
+
     return(
         <nav className="navigation flex">
-            <ul>
-                <li>
-                    <NavLink className="nav-link" to="/">Main</NavLink>
+            <ul className="flex  gap-half">
+                <li className="nav-item">
+                    <NavLink className="nav-link" to="/">Home</NavLink>
                 </li>
-                <li>
+                <li className="nav-item">
                     <NavLink className="nav-link" to="/draw">Draw</NavLink>
                 </li>
-                <li>
+                <li className="nav-item">
                     <NavLink className="nav-link" to="/gallery" >Gallery</NavLink>
                 </li>
-                <li>
-                    {user.id > 0 && 
+                {user.id > 0 && 
+                    <li className="nav-item last-item">
+                        
                         <img 
                             className="nav-user" 
                             src={user.profile_img} 
                             alt="profile" 
                             onClick={() => navigate(`/gallery/user/${user.id}`)} 
                         />
-                    }
-                </li>
+                    </li>
+                }
             </ul>
            
           

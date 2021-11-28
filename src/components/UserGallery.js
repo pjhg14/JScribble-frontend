@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion"
 import { UserContext } from "../App"
 import { userURL } from "../utils/urls"
 import Navigation from "./Navigation"
-import Loading from "./Loading";
+import LoadingPage from "./LoadingPage";
 import Modal from "./modal/Modal"
 import UserForm from "./UserForm"
 import NullUser from "./NullUser"
@@ -50,7 +50,7 @@ export default function UserGallery() {
         navigate("/")
     }
 
-    if (!isLoaded) return <Loading />
+    if (!isLoaded) return <LoadingPage />
 
     if (error) return <NullUser />
 
