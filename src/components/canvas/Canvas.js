@@ -21,7 +21,9 @@ export default function Canvas() {
     const [actionType, setActionType] = useState("")
 
     function setCanvasBoundingBox(entries) {
-        console.log("RSO Callback called")
+        if (process.env.NODE_ENV !== "production") {
+            console.log("RSO Callback called")
+        }
 
         userDispatch({
             type: "setCanvasBindingRect",
