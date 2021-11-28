@@ -61,7 +61,6 @@ export default function Gallery() {
                         setImages([])
                         setEmptyResult(false)
                         
-
                     } else {
                         resetLists()
                     }

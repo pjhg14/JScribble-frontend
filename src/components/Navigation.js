@@ -7,11 +7,11 @@ export default function Navigation() {
     const { user } = useContext(UserContext)
     const navigate = useNavigate()
 
-    console.log({user})
+    // console.log({user})
 
     return(
         <nav className="navigation flex">
-            <ul className="flex  gap-half">
+            <ul className="flex gap-half">
                 <li className="nav-item">
                     <NavLink className="nav-link" to="/">Home</NavLink>
                 </li>
