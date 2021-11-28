@@ -187,3 +187,174 @@ function clearRect(context, x, y, width) {
         width
     )
 }
+
+// // fills all similarly colored adjacent pixels with a target color (target color defaults to black rgba(0,0,0,1))
+// function fillCanvas(context, clickX, clickY) {
+//     console.log("filling...")
+//     /* 
+//     source: Wikipedia (flood fill)
+//     fn fill(x, y):
+//         if not Inside(x, y) then return
+//         let s = new empty queue or stack
+//         Add (x, x, y, 1) to s
+//         Add (x, x, y - 1, -1) to s
+//         while s is not empty:
+//             Remove an (x1, x2, y, dy) from s
+//             let x = x1
+//             if Inside(x, y):
+//             while Inside(x - 1, y):
+//                 Set(x - 1, y)
+//                 x = x - 1
+//             if x < x1:
+//             Add (x, x1-1, y-dy, -dy) to s
+//             while x1 < x2:
+//             while Inside(x1, y):
+//                 Set(x1, y)
+//                 x1 = x1 + 1
+//             Add (x, x1 - 1, y+dy, dy) to s
+//             if x1 - 1 > x2:
+//                 Add (x2 + 1, x1 - 1, y-dy, -dy)
+//             while x1 < x2 and not Inside(x1, y):
+//                 x1 = x1 + 1
+//             x = x1
+//     */
+
+//     // Set-up
+//     const queue = []
+//     const width = context.canvas.width
+//     const height = context.canvas.height
+//     let imageData = context.getImageData(0, 0, width, height)
+
+//     const clickPosition = getPosition(clickX, clickY, width)
+
+//     if (imageData.data[clickPosition] === undefined) return
+
+//     // Set color to change (all colors equal to clickPosition color)
+//     const insideColor = getColorFromPosition(imageData, clickPosition)
+//     console.log({insideColor})
+
+//     // Execute
+//     queue.push({x1: clickX, x2: clickX, y: clickY, dy: 1})
+//     queue.push({x1: clickX, x2: clickX, y: clickY - 1, dy: -1})
+
+//     // console.log(inside(context,imageData, 100, 50, insideColor))
+
+//     let i = 0
+//     while (queue.length > 0 && i < 1000) {
+//         console.log("Main loop")
+//         console.log({i})
+//         console.log(queue)
+
+//         let {x1, x2, y, dy} = queue.shift()
+//         let x = x1
+
+//         if (inside(context, imageData, x, y, insideColor)) {
+//             let z = 0
+//             while (inside(context, imageData, x - 1, y, insideColor) &&  z < 500) {
+//                 console.log("Sub loop 1")
+
+//                 set(context, imageData, x - 1, y)
+//                 x--
+//                 z++
+//             }
+//         }
+
+//         if (x < x1) {
+//             queue.push({x1: x, x2: x1 - 1, y: y - dy, dy: -dy})
+//         }
+
+//         while (x1 < x2) {
+//             while (inside(context, imageData, x1, y, insideColor)) {
+//                 console.log("Sub loop 2")
+
+//                 set(context, imageData, x1, y)
+//                 x1++
+//             }
+
+//             queue.push({x1: x, x2: x1 - 1, y: y + dy, dy: dy})
+
+//             if (x1 - 1 > x2) {
+//                 queue.push({x1: x2 + 1, x2: x1 - 1, y: y - dy, dy: -dy})
+//             }
+
+//             while (x1 < x2 && !inside(context, imageData, x1, y, insideColor)) {
+//                 console.log("Sub loop 3")
+
+//                 x1 = x1 + 1
+//             }
+
+//             x = x1
+//         }
+//     }
+
+//     return imageData
+// }
+
+// function inside(context, imageData, x, y, insideColor) {
+//     const width = context.canvas.width
+//     const height = context.canvas.height
+
+//     if (x > width || y > height) return false
+
+//     const position = getPosition(x, y, width)
+
+//     const positionColor = {
+//         red: imageData.data[position], 
+//         green:imageData.data[position + 1],
+//         blue: imageData.data[position + 2],
+//         alpha: imageData.data[position + 3]
+//     }
+
+//     console.log({positionColor})
+
+//     return (
+//         positionColor.red === insideColor.red 
+//         &&
+//         positionColor.blue === insideColor.blue 
+//         &&
+//         positionColor.green === insideColor.green 
+//         &&
+//         positionColor.alpha === insideColor.alpha 
+//     )
+// }
+
+// function set(context, imageData, x, y) {
+//     const position = getPosition(x, y, context.canvas.width)
+//     const { red, green, blue } = hexToRGB(context.fillStyle)
+
+//     imageData.data[position] = red
+//     imageData.data[position + 1] = blue
+//     imageData.data[position + 2] = green
+//     imageData.data[position + 3] = 255
+
+//     return imageData
+// }
+
+// function getPosition(x, y, width) {
+//     return  y * (width * 4) + x * 4
+// }
+
+// function getColorFromPosition(imageData, position) {
+//     // console.log(imageData)
+
+//     return {
+//         red: imageData.data[position], 
+//         green:imageData.data[position + 1],
+//         blue: imageData.data[position + 2],
+//         alpha: imageData.data[position + 3]
+//     }
+// }
+
+// function hexToRGB(hex) {
+//     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+//     return result ? {
+//       red: parseInt(result[1], 16),
+//       green: parseInt(result[2], 16),
+//       blue: parseInt(result[3], 16)
+//     } : {
+//       red: 0,
+//       green: 0,
+//       blue: 0
+//     }
+// }

@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
+import { AnimatePresence } from "framer-motion"
 import { UserContext } from "../App"
 import { userURL } from "../utils/urls"
 import Navigation from "./Navigation"
 import Loading from "./Loading";
-import Modal from "./Modal"
-import { AnimatePresence } from "framer-motion"
+import Modal from "./modal/Modal"
 import UserForm from "./UserForm"
 import NullUser from "./NullUser"
 
@@ -41,11 +41,6 @@ export default function UserGallery() {
                     setIsPersonalGallery(parseInt(userId) === user.id)
                 }
             })
-
-
-
-        
-
     },[user, userId])
 
     function handleLogOut() {

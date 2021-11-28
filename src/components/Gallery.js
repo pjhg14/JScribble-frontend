@@ -9,10 +9,11 @@ export default function Gallery() {
     const [query, setQuery] = useState("")
     const [images, setImages] = useState([])
     const [users, setUsers] = useState([])
+    const [emptyResult, setEmptyResult] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
-        sampleImages()
+        sampleItems()
     },[])
 
     const imageCards = images.map(image => {
@@ -31,7 +32,7 @@ export default function Gallery() {
 
     const userCards = users.map(user => {
         return(
-            <div className="card flex" key={user.id}>
+            <div className="card flex column center" key={user.id}>
                 <img 
                     className="profile-small pointer" 
                     src={user.profile_img} 
@@ -43,33 +44,72 @@ export default function Gallery() {
         )
     })
 
-    // get a sample of all images in the database
-    function sampleImages() {
-        fetch(imageURL)
-            .then(resp => resp.json())
-            .then(queriedImages => {
-                setImages(queriedImages)
-            })
+    // get a sample of items in the database
+    function sampleItems() {
+        if (queryType === "users") {
+            fetch(`${userURL}/sample`)
+                .then(resp => resp.json())
+                .then(queriedUsers => {
+                    if (queriedUsers) {
+                        setUsers(queriedUsers)
+                        setImages([])
+                        setEmptyResult(false)
+                    } else {
+                        resetLists()
+                    }
+                })
+        } else {
+            fetch(`${imageURL}/sample`)
+                .then(resp => resp.json())
+                .then(queriedImages => {
+                    if (queriedImages) {
+                        setUsers([])
+                        setImages(queriedImages)
+                        setEmptyResult(false)
+                    } else {
+                        resetLists()
+                    }
+                })
+        }
     }
 
     function handleFormSubmit(event) {
         event.preventDefault()
 
-        if (queryType === "image") {
+        if (queryType === "images") {
             fetch(`${imageURL}/find/${query}`)
                 .then(resp => resp.json())
                 .then(queriedImages => {
-                    setImages(queriedImages)
-                    setUsers([])
+                    console.log(queriedImages)
+                    if (queriedImages.error || queriedImages.length <= 0) {
+                        resetLists()
+                    } else {
+                        setImages(queriedImages)
+                        setUsers([])
+                        setEmptyResult(false)
+                    }
+
                 })
         } else {
             fetch(`${userURL}/find/${query}`)
                 .then(resp => resp.json())
                 .then(queriedUsers => {
-                    setImages([])
-                    setUsers(queriedUsers)
+                    console.log(queriedUsers)
+                    if (queriedUsers.error || queriedUsers.length <= 0) {
+                        resetLists()
+                    } else {
+                        setImages([])
+                        setUsers(queriedUsers)
+                        setEmptyResult(false)
+                    }
                 })
         }        
+    }
+
+    function resetLists() {
+        setImages([])
+        setUsers([])
+        setEmptyResult(true)
     }
 
     return(
@@ -78,15 +118,14 @@ export default function Gallery() {
             <main className="gallery flex">
                 <header className="gallery-header flex">
                     <h1 className="title">Gallery</h1>
-                    <p className="sub-title"></p>
                 </header>
-                <section className="flex">
+                <section className="search flex wrap">
                     <span className="search-bar flex">
                         <select className="sb-item start" onChange={e => setQueryType(e.target.value)}>
-                            <option value="image">images</option>
-                            <option value="user">users</option>
+                            <option value="images">images</option>
+                            <option value="users">users</option>
                         </select>
-                        <form role="search" onSubmit={handleFormSubmit}>
+                        <form className="flex center" role="search" onSubmit={handleFormSubmit}>
                             <input 
                                 className="sb-item middle" 
                                 type="search" placeholder="Search images & users" 
@@ -97,13 +136,14 @@ export default function Gallery() {
                             <button className="sb-item end" type="submit">search</button>
                         </form>
                     </span>
-                        <button className="button" onClick={sampleImages}>Sample</button>
+                    <button className="button" onClick={sampleItems}>Sample</button>
                 </section>
 
                 <Divider />
 
                 <section className="results flex">
                     <div className="result-list grid">
+                        {emptyResult && <h2 className="empty-set">No results</h2>}
                         {imageCards}
                         {userCards}
                     </div>

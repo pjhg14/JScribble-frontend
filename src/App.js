@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import { Route, Routes } from "react-router";
-import Canvas from "./components/Canvas";
+import Canvas from "./components/canvas/Canvas";
 import Gallery from "./components/Gallery";
 import ImageViewer from "./components/ImageViewer";
 import Landing from "./components/Landing";

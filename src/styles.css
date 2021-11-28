@@ -53,7 +53,6 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    /* overflow-x: scroll; */
     overflow-x: hidden;
 }
 
@@ -67,7 +66,6 @@ a:hover {
 
 ::-webkit-scrollbar {
     width: 0.5rem;
-
     background-color: var(--background-color);
 }
 
@@ -94,6 +92,10 @@ a:hover {
 .center {
     justify-content: center;
     align-items: center;
+}
+
+.wrap {
+    flex-wrap: wrap;
 }
 
 .gap-none {
@@ -190,17 +192,27 @@ a:hover {
 }
 
 .footer {
-    --gap: 0.7ch;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
+    padding-right: 0.5rem;
     background-color: var(--main-accent-color);
     color: var(--background-color);
     width: 100vw;
 }
 
-.mb-link {
-    text-decoration: underline;
-    color: inherit;
+.mb-span {
+    flex-wrap: wrap;
+}
+
+.mb-link:hover {
+    box-shadow: none;
+}
+
+.mb-logo {
+    cursor: pointer;
+    padding: 0.5rem;
+    background-color: #F5F3EB;
+    border-radius: 1rem;
 }
 
 /* Landing page */
@@ -339,24 +351,22 @@ a:hover {
 /* Draw page */
 .draw-page {
     /* --gap: 1.5rem; */
-    grid-template-columns: auto 3fr auto;
+    grid-template-columns: auto 1fr auto;
     justify-content: center;
     align-items: center;
     margin: 0 1rem;
 }
 
 .toolbar {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    width: fit-content;
     height: 100vh;
 }
 
-.right {
+.left {
     max-width: 10rem;
 }
 
-.left {
+.right {
     max-width: 10rem;
 }
 
@@ -375,8 +385,6 @@ a:hover {
 
 /* RangePicker */
 .range-picker {
-    
-
     flex-direction: column;
 }
 
@@ -508,6 +516,35 @@ a:hover {
     border-radius: var(--rounded);
 }
 
+@media only screen and (max-width: 769px) {
+    .draw-page {
+        grid-template-columns: none;
+        grid-template-areas:
+            'board'
+            'tools'
+            'actions';
+    }
+
+    .toolbar {
+        --gap: 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+        /* display: none; */
+    }
+
+    .left {
+        grid-area: tools;
+    }
+
+    .right {
+        grid-area: actions;
+    }
+
+    .board {
+        grid-area: board;
+    }
+}
+
 /* Gallery page */
 .gallery {
     flex-direction: column;
@@ -632,6 +669,17 @@ a:hover {
 .result-list {
     grid-template-columns: repeat(3, 1fr);
     margin: 0 2vw;
+}
+
+.empty-set {
+    grid-column: span 3;
+}
+
+@media only screen and (max-width: 769px) {
+    .search {
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .user-page {

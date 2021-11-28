@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
+import { Link } from "react-router-dom";
 // import { UserContext } from "../App"
 import { imageURL } from "../utils/urls"
 import Navigation from "./Navigation"
 import Loading from "./Loading";
-import { Link } from "react-router-dom";
 
 export default function ImageViewer() {
     // const { user } = useContext(UserContext)

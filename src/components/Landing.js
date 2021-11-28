@@ -1,13 +1,13 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import Divider from "./Divider";
-import Modal from "./Modal";
-import Portal from "./Portal";
 import { AnimatePresence } from "framer-motion";
+import { UserContext } from "../App";
+import Divider from "./Divider";
+import Modal from "./modal/Modal";
+import Portal from "./Portal";
 
 export default function Landing() {
     const { user } = useContext(UserContext)
@@ -140,12 +140,29 @@ export default function Landing() {
                                 <img className="personal-icon" src="assets/initial-logo-dark.png" alt="logo"/>
                             </a>
                         </div>
-                            
                     </span>
                 </section>
+
+                <Divider />
+
+                <section className="landing-section flex column">
+                    <span className="mb-span flex center gap-half">
+                        <p>
+                            This app was created for a 
+                        </p>
+                        <a className="mb-link" href="https://mintbean.io" target="_blank" rel="noreferrer">
+                            <img className="mb-logo" src="assets/mb-logo.svg" alt="mintbean" />
+                        </a>
+                        <p>
+                            hackathon
+                        </p>
+                    </span>
+                </section>
+
+                <Divider />
+
                 <footer className="footer flex">
-                    A mintbean hackathons enterant, main site
-                    <a className="mb-link" href="https://mintbean.io" target="_blank" rel="noreferrer"> here</a>
+                    <p>v1.1</p>
                 </footer>
             </div>
         </>
