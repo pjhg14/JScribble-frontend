@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router";
 import { imageURL, userURL } from "../utils/urls";
 import Divider from "./Divider";
@@ -14,9 +14,11 @@ export default function Gallery() {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
+    const startingQuery = useCallback(sampleItems,[queryType])
+
     useEffect(() => {
-        sampleItems()
-    },[])
+        startingQuery()
+    },[startingQuery])
 
     const imageCards = images.map(image => {
         return(
@@ -132,24 +134,21 @@ export default function Gallery() {
                 <header className="gallery-header flex">
                     <h1 className="title">Gallery</h1>
                 </header>
-                <section className="search flex wrap">
-                    <span className="search-bar flex">
-                        <select className="sb-item start" onChange={e => setQueryType(e.target.value)}>
-                            <option value="images">images</option>
-                            <option value="users">users</option>
-                        </select>
-                        <form className="flex center" role="search" onSubmit={handleFormSubmit}>
-                            <input 
-                                className="sb-item middle" 
-                                type="search" placeholder="Search images & users" 
-                                aria-label="search users or images" 
-                                value={query}
-                                onChange={e => setQuery(e.target.value)}
-                            />
-                            <button className="sb-item end" type="submit">search</button>
-                        </form>
-                    </span>
-                    <button className="button" onClick={sampleItems}>Sample</button>
+                <section className="search flex gap-none">
+                    <select className="sb-item start" onChange={e => setQueryType(e.target.value)}>
+                        <option value="images">images</option>
+                        <option value="users">users</option>
+                    </select>
+                    <form className="sb-item flex center" role="search" onSubmit={handleFormSubmit}>
+                        <input 
+                            className="sb-item middle" 
+                            type="search" placeholder="Search images & users" 
+                            aria-label="search users or images" 
+                            value={query}
+                            onChange={e => setQuery(e.target.value)}
+                        />
+                        <button className="sb-item end" type="submit">search</button>
+                    </form>
                 </section>
 
                 <Divider />

@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useReducer, useContext, useState } from "react";
+import { useEffect, useRef, useReducer, useContext, useState, useCallback } from "react";
 import { UserContext } from "../../App";
 import { 
     drawEnd, drawStart, ellipseStamp, eraseEnd, 
@@ -15,32 +15,30 @@ import Tools from "./Tools";
 
 export default function Canvas() {
     const canvas = useRef(null)
-    const [state, userDispatch] = useReducer(canvasReducer, initialCanvasState)
+    const [state, canvasDispatch] = useReducer(canvasReducer, initialCanvasState)
     const { user } = useContext(UserContext)
     const [modalOpen, setModalOpen] = useState(false)
     const [actionType, setActionType] = useState("")
 
-    function setCanvasBoundingBox(entries) {
-        if (process.env.NODE_ENV !== "production") {
-            console.log("RSO Callback called")
-        }
+    const setCanvasBoundingBox = useCallback(entries => {
+        for (const entry of entries) {
+            if (process.env.NODE_ENV !== "production") {
+                console.log("Canvas Resize Callback called")
+            }
+    
+            canvasDispatch({
+                type: "setCanvasBindingRect",
+                payload: entry.target.getBoundingClientRect()
+            })
 
-        userDispatch({
-            type: "setCanvasBindingRect",
-            payload: entries[0].target.getBoundingClientRect()
-        })
-
-        if (canvas.current) {
-            canvas.current.width = state.canvasRect.width
-            canvas.current.height = state.canvasRect.height
+            // console.log(canvas.current)
         }
-        
-    }
+    },[])
 
     useResizeObserver(setCanvasBoundingBox, canvas)
 
     useEffect(()=> {
-        userDispatch({
+        canvasDispatch({
             type: "init",
             payload: canvas.current
         })
@@ -51,16 +49,16 @@ export default function Canvas() {
 
         switch (state.drawType) {
             case "pen":
-                drawStart(event, state, userDispatch)
+                drawStart(event, state, canvasDispatch)
                 break;
             case "line":
-                lineStart(event, state, userDispatch)
+                lineStart(event, state, canvasDispatch)
                 break;
             case "fill":
                 // None, just need the case so draw type does not reset
                 break;
             case "erase":
-                eraseStart(event, state, userDispatch)
+                eraseStart(event, state, canvasDispatch)
                 break;
             case "rectangle":
                 // None, just need the case so draw type does not reset
@@ -69,7 +67,7 @@ export default function Canvas() {
                 // None, just need the case so draw type does not reset
                 break;
             default:
-                userDispatch({
+                canvasDispatch({
                     type: "setDrawType",
                     payload: "pen"
                 })
@@ -98,7 +96,7 @@ export default function Canvas() {
                 // None, just need the case so draw type does not reset
                 break;
             default:
-                userDispatch({
+                canvasDispatch({
                     type: "setDrawType",
                     payload: "pen"
                 })
@@ -109,10 +107,10 @@ export default function Canvas() {
     function handleActionUp(event) {
         switch (state.drawType) {
             case "pen":
-                drawEnd(state, userDispatch)
+                drawEnd(state, canvasDispatch)
                 break;
             case "line":
-                lineEnd(event, state, userDispatch)
+                lineEnd(event, state, canvasDispatch)
                 break
             case "fill":
                 if (event.type === 'mouseout') return
@@ -120,7 +118,7 @@ export default function Canvas() {
                 // Fill(event)
                 break
             case "erase":
-                eraseEnd(state, userDispatch)
+                eraseEnd(state, canvasDispatch)
                 break
             case "rectangle":
                 rectStamp(event, state)
@@ -129,7 +127,7 @@ export default function Canvas() {
                 ellipseStamp(event, state)
                 break
             default:
-                userDispatch({
+                canvasDispatch({
                     type: "setDrawType",
                     payload: "pen"
                 })
@@ -139,7 +137,7 @@ export default function Canvas() {
         // if end of drawing was NOT due to the mouse leaving the canvas
         if (event.type !== 'mouseout') {
             // add drawn path to last path
-            userDispatch({
+            canvasDispatch({
                 type: "addLastPath",
                 payload: state.context.getImageData(0, 0, state.canvasRect.width, state.canvasRect.height)
             })
@@ -179,12 +177,12 @@ export default function Canvas() {
                 }
             </AnimatePresence>
             <div className="draw-page grid">
-                <Tools state={state} userDispatch={userDispatch} />
+                <Tools state={state} canvasDispatch={canvasDispatch} />
                 <canvas 
                     className="board" 
                     ref={canvas}
-                    // width="1600" 
-                    // height="900"
+                    width={state.canvasRect?.width ? state.canvasRect.width : "1600"}
+                    height={state.canvasRect?.height ? state.canvasRect.height : "900"}
                     // Desktop Mouse Events
                     onMouseDown={handleActionDown}
                     onMouseMove={handleActionMove}

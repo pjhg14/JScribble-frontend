@@ -604,17 +604,15 @@ a:hover {
     font-size: var(--fs-600);
 }
 
+.search {
+    height: 2rem;
+}
+
 .search-bar {
     --gap: 0;
-    /* border: 1px solid var(--main-accent-color); */
-    /* border-radius: 0.5rem; */
     align-items: center;
     justify-content: center;
     flex: 1 0 auto;
-}
-
-.search-bar form {
-    height: 100%;
 }
 
 .sb-item {

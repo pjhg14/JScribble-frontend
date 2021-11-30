@@ -1,7 +1,7 @@
 import ColorPicker from "../ColorPicker"
 import RangePicker from "../RangePicker"
 
-export default function Tools({ state, userDispatch }) {
+export default function Tools({ state, canvasDispatch }) {
 
     // ---------------------------------------------------------------------------------------------------/
     // fill function //////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ export default function Tools({ state, userDispatch }) {
     function handleCanvasClear() {
         state.context.clearRect(0, 0, state.canvasRect.width, state.canvasRect.height)
 
-        userDispatch({
+        canvasDispatch({
             type: "clearPastPaths"
         })
     }
@@ -36,7 +36,7 @@ export default function Tools({ state, userDispatch }) {
         const imageData = state.pastPaths[state.pastPaths.length - 2]
         state.context.putImageData(imageData, 0, 0)
 
-        userDispatch({
+        canvasDispatch({
             type: "removeLastPath"
         })
     }
@@ -47,49 +47,49 @@ export default function Tools({ state, userDispatch }) {
     // Canvas Context state change ////////////////////////////////////////////////////////////////////////
     // ---------------------------------------------------------------------------------------------------/
     function handlePenWidthChange(event) {
-        userDispatch({
+        canvasDispatch({
             type: "setPenSize",
             payload: event.target.value
         })
     }
 
     function handlePenColorChange(event) {
-        userDispatch({
+        canvasDispatch({
             type: "setPenColor",
             payload: event.target.value
         })
     }
 
     function handleFillColorChange(event) {
-        userDispatch({
+        canvasDispatch({
             type: "setFillColor",
             payload: event.target.value
         })
     }
 
     function handleCapChange(event) {
-        userDispatch({
+        canvasDispatch({
             type: "setPenCap",
             payload: event.target.value
         })
     }
 
     function handleDrawTypeChange(event) {
-        userDispatch({
+        canvasDispatch({
             type: "setDrawType",
             payload: event.target.value
         })
     }
 
     function handleStampWidthChange(event) {
-        userDispatch({
+        canvasDispatch({
             type: "setStampWidth",
             payload: event.target.value
         })
     }
 
     function handleStampHeightChange(event) {
-        userDispatch({
+        canvasDispatch({
             type: "setStampHeight",
             payload: event.target.value
         })
