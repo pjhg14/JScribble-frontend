@@ -80,6 +80,10 @@ a:hover {
     gap: var(--gap, 1rem);
 }
 
+.justify-end {
+    justify-content: end;
+}
+
 .column {
     flex-direction: column;
 }
@@ -91,6 +95,10 @@ a:hover {
 
 .center {
     justify-content: center;
+    align-items: center;
+}
+
+.center-v {
     align-items: center;
 }
 
@@ -145,6 +153,14 @@ a:hover {
     --main-accent-color: hsl(0, 0%, 50%);
     color: var(--main-accent-color);
     background-color: var(--background-color);
+}
+
+.delete {
+    --main-accent-color: red;
+}
+
+.delete:hover {
+    --background-color: red;
 }
 
 .debug {
@@ -374,7 +390,6 @@ a:hover {
 
 /* Draw page */
 .draw-page {
-    /* --gap: 1.5rem; */
     grid-template-columns: auto 1fr auto;
     justify-content: center;
     align-items: center;
@@ -565,10 +580,10 @@ a:hover {
     }
 
     .toolbar {
-        --gap: 0;
         flex-direction: row;
         flex-wrap: wrap;
-        /* display: none; */
+        width: 100%;
+        height: auto;
     }
 
     .left {
@@ -588,7 +603,7 @@ a:hover {
 .gallery {
     flex-direction: column;
     align-items: center;
-    margin: 10vh 5vw 0 5vw;
+    margin: 10vh 5vw 5vw 5vw;
 }
 
 .gallery-header {
@@ -737,8 +752,13 @@ a:hover {
     font-size: var(--fs-icon);
 }
 
+.account {
+    grid-template-columns: repeat(3, 1fr);
+}
+
 .profile {
     --gap: 1rem;
+    /* grid-column: span 3; */
     flex-direction: column;
     justify-content: start;
     align-items: center;
@@ -765,10 +785,16 @@ a:hover {
 .presentation {
     aspect-ratio: 16 / 9;
     width: 60vw;
+    border: 1px solid var(--main-accent-color);
+    border-radius: 1rem;
 }
 
 .image-actions {
     grid-column: span 2;
+}
+
+.options {
+    margin-top: 1rem;
 }
 
 /* Modal Component styles */

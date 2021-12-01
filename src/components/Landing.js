@@ -92,21 +92,19 @@ export default function Landing() {
                                     <p>or</p>
                                     <button className="button inverted" onClick={() => handleOpen("signup")}>Signup</button>
                                 </span>
-                                <h3>See other works!</h3>
-                                <Link to="/gallery" className="button">Gallery</Link>
                             </>
                         ) : (
                             <>
-                                <h3>Share your ideas!</h3>
+                                <h3>Start Drawing!</h3>
                                 <Link to="/draw" className="button">Create</Link>
 
-                                <h3>View your profile</h3>
+                                <h3>View your profile!</h3>
                                 <Link to={`/gallery/user/${user.id}`} className="button">Profile</Link>
-
-                                <h3>See other works!</h3>
-                                <Link to="/gallery" className="button">Galleries</Link>
                             </>
+                            
                     )}
+                    <h3>See other works!</h3>
+                    <Link to="/gallery" className="button">Gallery</Link>
                 </section>
 
                 <Divider />

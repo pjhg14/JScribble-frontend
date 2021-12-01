@@ -4,7 +4,7 @@ import { userURL } from "../utils/urls";
 import Login from "./Login";
 import Signup from "./Signup";
 
-export default function Portal({authType, closeModal}) {
+export default function Portal({ authType, closeModal }) {
     const { userDispatch } = useContext(UserContext)
     const [errors, setErrors] = useState([])
 

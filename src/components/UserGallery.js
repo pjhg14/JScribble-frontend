@@ -43,6 +43,26 @@ export default function UserGallery() {
             })
     },[user, userId])
 
+    if (!isLoaded) return <LoadingPage />
+
+    if (error) return <NullUser />
+
+    const creations = userData.images.map(image => {
+        return(
+            <div className="flex center" key={image.id}>
+                <div className="card flex column center" >
+                    <img 
+                        className="image-small" 
+                        src={image.url} 
+                        alt={image.title} 
+                        onClick={() => navigate(`/gallery/image/${image.id}`)}
+                    />
+                    <p className="">{image.title}</p>
+                </div>
+            </div>
+        )
+    })
+
     function handleLogOut() {
         userDispatch({
             type: "logout"
@@ -50,30 +70,39 @@ export default function UserGallery() {
         navigate("/")
     }
 
-    if (!isLoaded) return <LoadingPage />
+    function handleDelete() {
 
-    if (error) return <NullUser />
-
-    const creations = userData.images.map(image => {
-        return(
-            <div className="card flex" key={image.id}>
-                <img 
-                    className="image-small" 
-                    src={image.url} 
-                    alt={image.title} 
-                    onClick={() => navigate(`/gallery/image/${image.id}`)}
-                />
-                <p className="">{image.title}</p>
-            </div>
-        )
-    })
+        fetch(`${userURL}/deactivate`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.token}`
+            },
+        })
+            .then(resp => resp.json())
+            .then(() => {
+                userDispatch({
+                    type: "logout"
+                })
+                navigate("/")
+            })
+    }
 
     return(
         <>
             <AnimatePresence initial={false} exitBeforeEnter={true}>
                 { modalOpen && 
                     <Modal handleClose={handleClose}>
-                        <UserForm actionType={actionType} closeModal={handleClose} />
+                        { actionType === "delete" ? (
+                            <div className="flex column center">
+                                <h1>Delete</h1>
+                                <p>Are you sure you want to deactivate your account?</p>
+                                <p>All images you have uploaded will be deleted</p>
+                                <button className="button inverted delete" onClick={handleDelete}>Deactivate</button>
+                            </div>
+                        ) : (
+                            <UserForm actionType={actionType} closeModal={handleClose} />
+                        )}
                     </Modal>
                 }
             </AnimatePresence>
@@ -83,7 +112,7 @@ export default function UserGallery() {
                     <h1 className="title">{userData.username}'s Gallery</h1>
                     <button className="button back" onClick={() => navigate(-1)}>Back</button>
                 </header>
-                <main className="flex">
+                <main className="account grid">
                     <section className="profile flex">
                         <img className="profile-full" src={userData.profile_img} alt={userData.username} />
                         {isPersonalGallery && 
@@ -94,10 +123,15 @@ export default function UserGallery() {
                             </>
                         }
                     </section>
-                    <section className="works grid">
-                        { creations }
-                    </section>
+                    { creations }
                 </main>
+                {isPersonalGallery && 
+                    <footer className="flex justify-end">
+                        <button className="button inverted delete" onClick={() => handleOpen("delete")}>
+                            Deactivate account
+                        </button>
+                    </footer>
+                }
             </div>
         </>
     )

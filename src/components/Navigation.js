@@ -11,7 +11,7 @@ export default function Navigation() {
 
     return(
         <nav className="navigation flex">
-            <ul className="flex gap-half">
+            <ul className="flex gap-half center-v">
                 <li className="nav-item">
                     <NavLink className="nav-link" to="/">Home</NavLink>
                 </li>
@@ -33,11 +33,6 @@ export default function Navigation() {
                     </li>
                 }
             </ul>
-           
-          
-         
-  
-            
         </nav>
     )
 }

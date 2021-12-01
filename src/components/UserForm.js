@@ -50,7 +50,6 @@ export default function UserForm({ actionType, closeModal }) {
     }
 
     function handleUsernameUpdate() {
-        // TODO: handle update errors
         fetch(`${userURL}/${user.id}`, {
             method: "PATCH",
             headers: {
