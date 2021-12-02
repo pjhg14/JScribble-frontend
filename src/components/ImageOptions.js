@@ -33,14 +33,16 @@ export default function ImageOptions({ image, setImage, actionType, closeModal }
     }
 
     function handleDelete() {
+        
         fetch(`${imageURL}/${image.id}`, {
             method: "DELETE",
-            Authorization: `Bearer ${localStorage.token}`
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.token}`
+            },
         })
             .then(resp => resp.json())
-            .then(() => {
-                navigate(`/gallery/user/${user.id}`)
-            })
+            .then(() => navigate(`/gallery/user/${user.id}`))
     }
 
     return(

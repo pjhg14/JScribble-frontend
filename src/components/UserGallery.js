@@ -7,14 +7,14 @@ import Navigation from "./Navigation"
 import LoadingPage from "./LoadingPage";
 import Modal from "./modal/Modal"
 import UserForm from "./UserForm"
-import NullUser from "./NullUser"
+import NullPath from "./NullPath"
 
 export default function UserGallery() {
     const { user, userDispatch } = useContext(UserContext)
     const [isPersonalGallery, setIsPersonalGallery] = useState(false)
     const [userData, setUserData] = useState(null)
     const [isLoaded, setIsLoaded] = useState(false)
-    const [error, setError] = useState(false)
+    const [noSuchUser, setNoSuchUser] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
     const [actionType, setActionType] = useState("")
     const { userId } = useParams()
@@ -34,18 +34,19 @@ export default function UserGallery() {
             .then(resp => resp.json())
             .then(queriedUser => {
                 if (queriedUser.error) {
-                    setError(true)
+                    setNoSuchUser(true)
                 } else {
                     setUserData(queriedUser)
-                    setIsLoaded(true)
                     setIsPersonalGallery(parseInt(userId) === user.id)
                 }
+
+                setIsLoaded(true)
             })
     },[user, userId])
 
     if (!isLoaded) return <LoadingPage />
 
-    if (error) return <NullUser />
+    if (noSuchUser) return <NullPath />
 
     const creations = userData.images.map(image => {
         return(
@@ -80,7 +81,10 @@ export default function UserGallery() {
             },
         })
             .then(resp => resp.json())
-            .then(() => {
+            .then((msg) => {
+                console.log(msg)
+
+
                 userDispatch({
                     type: "logout"
                 })

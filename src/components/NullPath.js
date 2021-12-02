@@ -4,10 +4,10 @@ export default function NullPath() {
     const navigate = useNavigate()
 
     return(
-        <div className="error-page flex">
+        <div className="error-page flex column center">
             <h1>404</h1>
-            <h1>Oops, something went wrong</h1>
-            <button className="button" onClick={() => navigate("/")}>Return to landing</button>
+            <h1 className="null-query-header">Oops, couldn't find what you were looking for</h1>
+            <button className="button" onClick={() => navigate("/gallery")}>Return to gallery</button>
         </div>
     )
 }

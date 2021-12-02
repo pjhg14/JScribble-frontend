@@ -957,3 +957,7 @@ a:hover {
     flex-direction: column;
     align-items: center;
 }
+
+.null-query-header {
+    text-align: center;
+}

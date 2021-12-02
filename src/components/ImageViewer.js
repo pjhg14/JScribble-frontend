@@ -8,12 +8,14 @@ import Loading from "./LoadingPage"
 import { AnimatePresence } from "framer-motion"
 import Modal from "./modal/Modal"
 import ImageOptions from "./ImageOptions"
+import NullPath from "./NullPath"
 
 export default function ImageViewer() {
     const { user } = useContext(UserContext)
     const { imageId } = useParams()
     const [image, setImage] = useState(null)
     const [isLoaded, setIsLoaded] = useState(false)
+    const [noSuchImage, setNoSuchImage] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
     const [actionType, setActionType] = useState("")
     const navigate = useNavigate()
@@ -22,12 +24,19 @@ export default function ImageViewer() {
         fetch(`${imageURL}/${imageId}`)
             .then(resp => resp.json())
             .then(queriedImage => {
-                setImage(queriedImage)
+                if (queriedImage.error) {
+                    setNoSuchImage(true)
+                } else {
+                    setImage(queriedImage)
+                }
+                
                 setIsLoaded(true)
             })
     },[imageId])
 
     if (!isLoaded) return <Loading />
+
+    if (noSuchImage) return <NullPath /> 
 
     function handleClose() {
         setModalOpen(false)
