@@ -160,7 +160,7 @@ export default function Landing() {
                 <Divider />
 
                 <footer className="footer flex">
-                    <p>v1.1</p>
+                    <p>v1.3</p>
                 </footer>
             </div>
         </>

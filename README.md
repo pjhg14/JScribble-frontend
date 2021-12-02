@@ -44,8 +44,6 @@ JScribble is a small drawing application that allows you to doodle and draw on a
 
 ### Known Issues
 - Canvas clears on screen resize
-- On active screen resize, draw position becomes desynced (clears on refresh though... state issue?)
-- Draw position becomes desynced over time? (needs more testing, especially noticeable on smaller pen sizes)
 
 ### Potential Issues?
 - Undo stack depth is currently uncapped, could cause trouble?
